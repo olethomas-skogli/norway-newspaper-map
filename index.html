@@ -17,7 +17,7 @@
   </head>
   <body>
     <header class="app-header">
-      <h1>Avisene i Norge</h1>
+      <h1>Skjer i Norge om dagen a?</h1>
       <p>Klikk på en by for å velge avis og se de tre mest leste sakene.</p>
 
       <div class="mode-buttons">
@@ -25,7 +25,7 @@
           ⚽ Sport mode
         </button>
         <button id="genz-toggle" class="genz-toggle" type="button">
-          ✨ genZ mode
+          ✨ Gen Z mode
         </button>
       </div>
 
@@ -41,7 +41,7 @@
           Når:
           <select id="sport-week">
             <option value="all" selected>Alle</option>
-            <option value="this">Denne uke</option>
+            <option value="this">Denne uka</option>
             <option value="next">Neste uke</option>
           </select>
         </label>
@@ -105,7 +105,16 @@
       <span><i class="dot dot-local"></i> Lokalavis</span>
       <span><i class="dot dot-national"></i> Nasjonal avis</span>
       <span class="legend-sport"><i class="dot dot-sport"></i> Sport (direktesport.no)</span>
-      <span class="legend-genz"><i class="dot dot-genz"></i> Video (genZ)</span>
+      <span class="legend-genz"><i class="dot dot-genz"></i> Video (Gen Z)</span>
+    </div>
+
+    <!-- Fullscreen TikTok/Reels-style viewer (genZ mode) -->
+    <div id="reels-viewer" class="reels-viewer" hidden aria-hidden="true">
+      <div class="reels-frame">
+        <button class="reels-close" type="button" aria-label="Lukk">✕</button>
+        <button id="reels-mute" class="reels-mute" type="button" aria-label="Slå lyd av/på">🔇</button>
+        <div id="reels-track" class="reels-track"></div>
+      </div>
     </div>
 
     <script

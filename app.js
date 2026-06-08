@@ -40,9 +40,12 @@ let currentSport = "all"; // active sportName filter
 let currentWeek = "all"; // upcoming window: "all" | "this" | "next"
 
 // genZ mode: pivot to vertical reels, one pin per publication city. Reels load
-// lazily on pin click. Mutually exclusive with sport mode.
+// lazily on pin click into a fullscreen TikTok-style viewer. Mutually exclusive
+// with sport mode.
 let genzMode = false;
 let reelMarkers = []; // Leaflet markers for reel pins, cleared on exit
+let reelsObserver = null; // IntersectionObserver driving current-reel autoplay
+let reelsMuted = true; // shared mute state across the viewer
 
 // Norwegian number formatting for read counts (space as thousands separator).
 const nf = new Intl.NumberFormat("nb-NO");
@@ -887,7 +890,7 @@ function clearReelMarkers() {
   reelMarkers = [];
 }
 
-// One pink pin per publication city; reels load lazily when a pin is opened.
+// One pink pin per publication city; clicking opens the fullscreen reels viewer.
 function renderReelMarkers() {
   clearReelMarkers();
   for (const { papers } of cityMarkers) {
@@ -900,64 +903,157 @@ function renderReelMarkers() {
       fillOpacity: 0.9,
     }).addTo(map);
     marker.bindTooltip(city, { direction: "top" });
-    marker.bindPopup("", POPUP_OPTS);
-    marker.on("popupopen", (e) => fillReelPopup(e.popup, papers));
+    marker.on("click", () => openReelsViewer(papers, city));
     reelMarkers.push(marker);
   }
   setGenzNote("Klikk en by for å se reels");
 }
 
-// Lazily load + render a city's reels (vertical, inline-playable) into the popup.
-async function fillReelPopup(popup, papers) {
-  const c = document.createElement("div");
-  c.className = "video-popup";
-  const status = document.createElement("p");
-  status.className = "status";
-  status.textContent = "Laster reels…";
-  c.appendChild(status);
-  popup.setContent(c);
-  reflow(popup);
+// ---- Fullscreen reels viewer (TikTok/Instagram style) -----------------
+
+const reelsViewer = () => document.getElementById("reels-viewer");
+const reelsTrack = () => document.getElementById("reels-track");
+
+function reelVideos() {
+  return [...reelsTrack().querySelectorAll("video")];
+}
+
+// Open the viewer and lazily load the city's reels into it.
+async function openReelsViewer(papers, city) {
+  const viewer = reelsViewer();
+  const track = reelsTrack();
+  if (!viewer || !track) return;
+
+  track.innerHTML = '<p class="reels-status">Laster reels…</p>';
+  viewer.hidden = false;
+  viewer.setAttribute("aria-hidden", "false");
+  document.body.classList.add("reels-open");
+  viewer.querySelector(".reels-close")?.focus();
 
   try {
     const lists = await Promise.all(papers.map((p) => fetchReels(p.sitekey)));
-    const reels = lists
-      .flat()
-      .sort((a, b) => b.created - a.created)
-      .slice(0, 12);
-    status.remove();
-
-    if (!reels.length) {
-      const empty = document.createElement("p");
-      empty.className = "status";
-      empty.textContent = "Ingen reels her akkurat nå.";
-      c.appendChild(empty);
-      reflow(popup);
-      return;
-    }
-
-    for (const v of reels) {
-      const card = document.createElement("div");
-      card.className = "video-card";
-      const meta = Number.isNaN(v.created) ? "" : sportDate.format(v.created);
-      const media = v.mp4
-        ? `<video class="video-el" controls preload="none"${v.poster ? ` poster="${escapeHtml(v.poster)}"` : ""}><source src="${escapeHtml(v.mp4)}" type="video/mp4" /></video>`
-        : v.poster
-          ? `<img class="video-thumb" src="${escapeHtml(v.poster)}" alt="" />`
-          : "";
-      card.innerHTML = `
-        ${media}
-        <span class="video-title">${escapeHtml(v.title)}</span>
-        ${v.lead ? `<span class="video-lead">${escapeHtml(v.lead)}</span>` : ""}
-        ${meta ? `<span class="video-meta">${escapeHtml(meta)}</span>` : ""}`;
-      c.appendChild(card);
-    }
-    reflow(popup);
+    const reels = lists.flat().sort((a, b) => b.created - a.created);
+    if (!viewer.hidden) renderReels(reels, city);
   } catch (err) {
-    status.className = "status error";
-    status.textContent = "Klarte ikke å laste reels.";
-    console.error("Reel popup failed:", err);
-    reflow(popup);
+    track.innerHTML = '<p class="reels-status">Klarte ikke å laste reels.</p>';
+    console.error("Reels load failed:", err);
   }
+}
+
+function renderReels(reels, city) {
+  const track = reelsTrack();
+  track.innerHTML = "";
+
+  if (!reels.length) {
+    track.innerHTML = '<p class="reels-status">Ingen reels her akkurat nå.</p>';
+    return;
+  }
+
+  for (const v of reels) {
+    const reel = document.createElement("section");
+    reel.className = "reel";
+    const date = Number.isNaN(v.created) ? "" : sportDate.format(v.created);
+    const lead = v.lead
+      ? `<p class="reel-lead">${escapeHtml(v.lead)}</p>`
+      : "";
+    const link = v.permalink
+      ? `<a class="reel-link" href="${escapeHtml(v.permalink)}" target="_blank" rel="noopener">Se hele saken →</a>`
+      : "";
+    reel.innerHTML = `
+      <video class="reel-video" loop playsinline preload="none"${v.poster ? ` poster="${escapeHtml(v.poster)}"` : ""}>
+        ${v.mp4 ? `<source src="${escapeHtml(v.mp4)}" type="video/mp4" />` : ""}
+      </video>
+      <span class="reel-play" aria-hidden="true">▶</span>
+      <div class="reel-caption">
+        <p class="reel-by">${escapeHtml(city)}${date ? ` · ${escapeHtml(date)}` : ""}</p>
+        <p class="reel-title">${escapeHtml(v.title)}</p>
+        ${lead}
+        ${link}
+      </div>`;
+
+    const video = reel.querySelector("video");
+    video.muted = reelsMuted;
+    // Tap the video area to toggle play/pause (ignore taps on the link).
+    video.addEventListener("click", () => togglePlay(video, reel));
+    reel.querySelector(".reel-play").addEventListener("click", () =>
+      togglePlay(video, reel),
+    );
+    reel.addEventListener("play", () => reel.classList.remove("paused"), true);
+
+    track.appendChild(reel);
+  }
+
+  startReelsObserver();
+}
+
+function togglePlay(video, reel) {
+  if (video.paused) {
+    video.play();
+    reel.classList.remove("paused");
+  } else {
+    video.pause();
+    reel.classList.add("paused");
+  }
+}
+
+// Play whichever reel is in view, pause/reset the rest.
+function startReelsObserver() {
+  reelsObserver?.disconnect();
+  reelsObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const video = entry.target.querySelector("video");
+        if (!video) continue;
+        if (entry.isIntersecting) {
+          video.muted = reelsMuted;
+          video.play().catch(() => {});
+          entry.target.classList.remove("paused");
+        } else {
+          video.pause();
+          video.currentTime = 0;
+        }
+      }
+    },
+    { root: reelsTrack(), threshold: 0.6 },
+  );
+  for (const reel of reelsTrack().querySelectorAll(".reel")) {
+    reelsObserver.observe(reel);
+  }
+}
+
+function closeReelsViewer() {
+  const viewer = reelsViewer();
+  if (!viewer || viewer.hidden) return;
+  reelsObserver?.disconnect();
+  reelsObserver = null;
+  for (const v of reelVideos()) v.pause();
+  reelsTrack().innerHTML = "";
+  viewer.hidden = true;
+  viewer.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("reels-open");
+}
+
+function setReelsMuted(muted) {
+  reelsMuted = muted;
+  for (const v of reelVideos()) v.muted = muted;
+  const btn = document.getElementById("reels-mute");
+  if (btn) btn.textContent = muted ? "🔇" : "🔊";
+}
+
+function setupReelsViewer() {
+  const viewer = reelsViewer();
+  if (!viewer) return;
+  viewer.querySelector(".reels-close")?.addEventListener("click", closeReelsViewer);
+  document
+    .getElementById("reels-mute")
+    ?.addEventListener("click", () => setReelsMuted(!reelsMuted));
+  // Click on the dimmed backdrop (outside the frame) closes.
+  viewer.addEventListener("click", (e) => {
+    if (e.target === viewer) closeReelsViewer();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !viewer.hidden) closeReelsViewer();
+  });
 }
 
 function setGenzNote(text) {
@@ -997,6 +1093,7 @@ async function enterGenzMode() {
 function exitGenzMode() {
   genzMode = false;
   document.body.classList.remove("genz-mode");
+  closeReelsViewer();
   map.closePopup();
   clearReelMarkers();
   if (norwayBorderLayer) map.removeLayer(norwayBorderLayer);
@@ -1024,6 +1121,7 @@ async function init() {
   setupTopReadsFilter();
   setupSportMode();
   setupGenzMode();
+  setupReelsViewer();
 
   const res = await fetch("./publications.json");
   if (!res.ok) {
