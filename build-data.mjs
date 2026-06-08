@@ -41,11 +41,15 @@ async function main() {
   const publications = json._embedded?.publication ?? [];
   const pubByKey = new Map(publications.map((p) => [p.key, p]));
 
-  // Count how many counties each publication appears in (for national detection).
+  // Count how many counties each publication appears in (for national detection),
+  // and remember the first (primary) county name for each — used as the paper's
+  // region in the map's county filter. Most local papers sit in exactly one.
   const countyCount = new Map(); // key -> number of distinct counties
+  const primaryCounty = new Map(); // key -> first county name seen
   for (const county of counties) {
     for (const key of county.sitekeys ?? []) {
       countyCount.set(key, (countyCount.get(key) ?? 0) + 1);
+      if (!primaryCounty.has(key)) primaryCounty.set(key, county.name);
     }
   }
 
@@ -78,6 +82,7 @@ async function main() {
       city: coords.city,
       lat: coords.lat,
       lng: coords.lng,
+      county: primaryCounty.get(pub.key) ?? null,
       national: false,
     });
   }

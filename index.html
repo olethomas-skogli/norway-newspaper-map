@@ -18,7 +18,52 @@
   <body>
     <header class="app-header">
       <h1>Avisene i Norge</h1>
-      <p>Klikk på en by for å velge avis og se de tre mest leste sakene (siste 72 t).</p>
+      <p>Klikk på en by for å velge avis og se de tre mest leste sakene.</p>
+
+      <div class="controls">
+        <input
+          id="search"
+          class="search"
+          type="search"
+          placeholder="Søk by eller avis…"
+          list="search-list"
+          autocomplete="off"
+        />
+        <datalist id="search-list"></datalist>
+
+        <label class="field">
+          Tidsrom:
+          <select id="period">
+            <option value="24">Siste døgn</option>
+            <option value="48">Siste 2 døgn</option>
+            <option value="72" selected>Siste 3 døgn</option>
+          </select>
+        </label>
+
+        <label class="field">
+          Fylke:
+          <select id="county">
+            <option value="all">Alle fylker</option>
+          </select>
+        </label>
+
+        <label class="field">
+          Mest lest:
+          <select id="topreads">
+            <option value="0" selected>Alle steder</option>
+            <option value="10">Topp 10 steder</option>
+            <option value="25">Topp 25 steder</option>
+            <option value="50">Topp 50 steder</option>
+          </select>
+        </label>
+
+        <label class="checkbox-field">
+          <input id="free-only" type="checkbox" />
+          Vis kun gratis saker
+        </label>
+
+        <span id="filter-status" class="filter-status" hidden></span>
+      </div>
     </header>
 
     <div id="map"></div>

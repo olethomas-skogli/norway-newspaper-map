@@ -8,6 +8,7 @@
       "city": "Bergen",
       "lat": 60.3913,
       "lng": 5.3221,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -17,6 +18,7 @@
       "city": "Bergen",
       "lat": 60.3913,
       "lng": 5.3221,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -26,6 +28,7 @@
       "city": "Bergen",
       "lat": 60.3913,
       "lng": 5.3221,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -35,6 +38,7 @@
       "city": "Bergen",
       "lat": 60.3913,
       "lng": 5.3221,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -44,6 +48,7 @@
       "city": "Bergen",
       "lat": 60.3913,
       "lng": 5.3221,
+      "county": "Finnmark",
       "national": false
     },
     {
@@ -53,6 +58,7 @@
       "city": "Bjørkelangen",
       "lat": 59.891,
       "lng": 11.564,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -62,6 +68,7 @@
       "city": "Bodø",
       "lat": 67.2804,
       "lng": 14.4049,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -71,6 +78,7 @@
       "city": "Bodø",
       "lat": 67.2804,
       "lng": 14.4049,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -80,6 +88,7 @@
       "city": "Brandbu",
       "lat": 60.425,
       "lng": 10.507,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -89,6 +98,7 @@
       "city": "Brumunddal",
       "lat": 60.88,
       "lng": 10.941,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -98,6 +108,7 @@
       "city": "Bryne",
       "lat": 58.735,
       "lng": 5.6469,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -107,6 +118,7 @@
       "city": "Drammen",
       "lat": 59.744,
       "lng": 10.2045,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -116,6 +128,7 @@
       "city": "Drangedal",
       "lat": 59.096,
       "lng": 9.056,
+      "county": "Telemark",
       "national": false
     },
     {
@@ -125,6 +138,7 @@
       "city": "Drøbak",
       "lat": 59.663,
       "lng": 10.631,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -134,6 +148,7 @@
       "city": "Egersund",
       "lat": 58.451,
       "lng": 5.999,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -143,6 +158,7 @@
       "city": "Eidsvoll",
       "lat": 60.328,
       "lng": 11.26,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -152,6 +168,7 @@
       "city": "Elverum",
       "lat": 60.8819,
       "lng": 11.5623,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -161,6 +178,7 @@
       "city": "Enebakk",
       "lat": 59.768,
       "lng": 11.128,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -170,6 +188,7 @@
       "city": "Fagernes",
       "lat": 60.987,
       "lng": 9.238,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -179,6 +198,7 @@
       "city": "Finnsnes",
       "lat": 69.228,
       "lng": 17.977,
+      "county": "Troms",
       "national": false
     },
     {
@@ -188,6 +208,7 @@
       "city": "Flisa",
       "lat": 60.614,
       "lng": 12.014,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -197,6 +218,7 @@
       "city": "Florø",
       "lat": 61.5996,
       "lng": 5.0328,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -206,6 +228,7 @@
       "city": "Fredrikstad",
       "lat": 59.2181,
       "lng": 10.9298,
+      "county": "Østfold",
       "national": false
     },
     {
@@ -215,6 +238,7 @@
       "city": "Frosta",
       "lat": 63.587,
       "lng": 10.739,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -224,6 +248,7 @@
       "city": "Førde",
       "lat": 61.4524,
       "lng": 5.857,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -233,6 +258,7 @@
       "city": "Gjøvik",
       "lat": 60.7957,
       "lng": 10.6915,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -242,6 +268,7 @@
       "city": "Halden",
       "lat": 59.133,
       "lng": 11.3875,
+      "county": "Østfold",
       "national": false
     },
     {
@@ -251,6 +278,7 @@
       "city": "Hamar",
       "lat": 60.7945,
       "lng": 11.068,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -260,6 +288,7 @@
       "city": "Hammerfest",
       "lat": 70.6634,
       "lng": 23.6821,
+      "county": "Finnmark",
       "national": false
     },
     {
@@ -269,6 +298,7 @@
       "city": "Harstad",
       "lat": 68.798,
       "lng": 16.541,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -278,6 +308,7 @@
       "city": "Haugesund",
       "lat": 59.4136,
       "lng": 5.268,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -287,6 +318,7 @@
       "city": "Hokksund",
       "lat": 59.7745,
       "lng": 9.911,
+      "county": "Buskerud",
       "national": false
     },
     {
@@ -296,6 +328,7 @@
       "city": "Holmestrand",
       "lat": 59.489,
       "lng": 10.314,
+      "county": "Vestfold",
       "national": false
     },
     {
@@ -305,6 +338,7 @@
       "city": "Honningsvåg",
       "lat": 70.982,
       "lng": 25.97,
+      "county": "Finnmark",
       "national": false
     },
     {
@@ -314,6 +348,7 @@
       "city": "Horten",
       "lat": 59.417,
       "lng": 10.484,
+      "county": "Vestfold",
       "national": false
     },
     {
@@ -323,6 +358,7 @@
       "city": "Husnes",
       "lat": 59.871,
       "lng": 5.762,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -332,6 +368,7 @@
       "city": "Hønefoss",
       "lat": 60.168,
       "lng": 10.258,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -341,6 +378,7 @@
       "city": "Inderøy",
       "lat": 63.876,
       "lng": 11.27,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -350,6 +388,7 @@
       "city": "Jørpeland",
       "lat": 59.019,
       "lng": 6.049,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -359,6 +398,7 @@
       "city": "Kirkenes",
       "lat": 69.7273,
       "lng": 30.045,
+      "county": "Finnmark",
       "national": false
     },
     {
@@ -368,6 +408,7 @@
       "city": "Knarvik",
       "lat": 60.546,
       "lng": 5.286,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -377,6 +418,7 @@
       "city": "Kongsberg",
       "lat": 59.6687,
       "lng": 9.6499,
+      "county": "Buskerud",
       "national": false
     },
     {
@@ -386,6 +428,7 @@
       "city": "Kongsvinger",
       "lat": 60.1939,
       "lng": 11.9939,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -395,6 +438,7 @@
       "city": "Kopervik",
       "lat": 59.283,
       "lng": 5.301,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -404,6 +448,7 @@
       "city": "Kragerø",
       "lat": 58.868,
       "lng": 9.411,
+      "county": "Telemark",
       "national": false
     },
     {
@@ -413,6 +458,7 @@
       "city": "Kristiansand",
       "lat": 58.1467,
       "lng": 7.9956,
+      "county": "Agder",
       "national": false
     },
     {
@@ -422,6 +468,7 @@
       "city": "Kristiansund",
       "lat": 63.1109,
       "lng": 7.7281,
+      "county": "Møre og Romsdal",
       "national": false
     },
     {
@@ -431,6 +478,7 @@
       "city": "Lakselv",
       "lat": 70.05,
       "lng": 24.97,
+      "county": "Finnmark",
       "national": false
     },
     {
@@ -440,6 +488,7 @@
       "city": "Larvik",
       "lat": 59.0537,
       "lng": 10.0357,
+      "county": "Vestfold",
       "national": false
     },
     {
@@ -449,6 +498,7 @@
       "city": "Leknes",
       "lat": 68.146,
       "lng": 13.612,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -458,6 +508,7 @@
       "city": "Lena",
       "lat": 60.676,
       "lng": 10.833,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -467,6 +518,7 @@
       "city": "Levanger",
       "lat": 63.746,
       "lng": 11.299,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -476,6 +528,7 @@
       "city": "Lierbyen",
       "lat": 59.786,
       "lng": 10.239,
+      "county": "Buskerud",
       "national": false
     },
     {
@@ -485,6 +538,7 @@
       "city": "Lillehammer",
       "lat": 61.1153,
       "lng": 10.4662,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -494,6 +548,7 @@
       "city": "Lillestrøm",
       "lat": 59.956,
       "lng": 11.049,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -503,6 +558,7 @@
       "city": "Lyngdal",
       "lat": 58.138,
       "lng": 7.075,
+      "county": "Agder",
       "national": false
     },
     {
@@ -512,6 +568,7 @@
       "city": "Mandal",
       "lat": 58.029,
       "lng": 7.459,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -521,6 +578,7 @@
       "city": "Melhus",
       "lat": 63.284,
       "lng": 10.279,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -530,6 +588,7 @@
       "city": "Meråker",
       "lat": 63.417,
       "lng": 11.747,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -539,6 +598,7 @@
       "city": "Mo i Rana",
       "lat": 66.3128,
       "lng": 14.1428,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -548,6 +608,7 @@
       "city": "Mo i Rana",
       "lat": 66.3128,
       "lng": 14.1428,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -557,6 +618,7 @@
       "city": "Mosjøen",
       "lat": 65.837,
       "lng": 13.191,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -566,6 +628,7 @@
       "city": "Moss",
       "lat": 59.4344,
       "lng": 10.6578,
+      "county": "Østfold",
       "national": false
     },
     {
@@ -575,6 +638,7 @@
       "city": "Myre",
       "lat": 68.915,
       "lng": 15.076,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -584,6 +648,7 @@
       "city": "Mysen",
       "lat": 59.553,
       "lng": 11.327,
+      "county": "Østfold",
       "national": false
     },
     {
@@ -593,6 +658,7 @@
       "city": "Målselv",
       "lat": 69.048,
       "lng": 18.523,
+      "county": "Troms",
       "national": false
     },
     {
@@ -602,6 +668,7 @@
       "city": "Namsos",
       "lat": 64.466,
       "lng": 11.4958,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -611,6 +678,7 @@
       "city": "Narvik",
       "lat": 68.4385,
       "lng": 17.4272,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -620,6 +688,7 @@
       "city": "Nittedal",
       "lat": 60.056,
       "lng": 10.877,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -629,6 +698,7 @@
       "city": "Notodden",
       "lat": 59.559,
       "lng": 9.258,
+      "county": "Telemark",
       "national": false
     },
     {
@@ -638,6 +708,7 @@
       "city": "Nøtterøy",
       "lat": 59.207,
       "lng": 10.412,
+      "county": "Vestfold",
       "national": false
     },
     {
@@ -647,6 +718,7 @@
       "city": "Odda",
       "lat": 60.07,
       "lng": 6.545,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -656,6 +728,7 @@
       "city": "Oslo",
       "lat": 59.9139,
       "lng": 10.7522,
+      "county": "Oslo",
       "national": false
     },
     {
@@ -665,6 +738,7 @@
       "city": "Oslo",
       "lat": 59.9139,
       "lng": 10.7522,
+      "county": "Oslo",
       "national": false
     },
     {
@@ -674,6 +748,7 @@
       "city": "Oslo",
       "lat": 59.9139,
       "lng": 10.7522,
+      "county": "Oslo",
       "national": false
     },
     {
@@ -683,6 +758,7 @@
       "city": "Oslo",
       "lat": 59.9139,
       "lng": 10.7522,
+      "county": "Oslo",
       "national": false
     },
     {
@@ -692,6 +768,7 @@
       "city": "Oslo",
       "lat": 59.9139,
       "lng": 10.7522,
+      "county": "Oslo",
       "national": false
     },
     {
@@ -701,6 +778,7 @@
       "city": "Otta",
       "lat": 61.772,
       "lng": 9.539,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -710,6 +788,7 @@
       "city": "Porsgrunn",
       "lat": 59.1405,
       "lng": 9.6561,
+      "county": "Telemark",
       "national": false
     },
     {
@@ -719,6 +798,7 @@
       "city": "Rakkestad",
       "lat": 59.426,
       "lng": 11.343,
+      "county": "Østfold",
       "national": false
     },
     {
@@ -728,6 +808,7 @@
       "city": "Randaberg",
       "lat": 58.998,
       "lng": 5.617,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -737,6 +818,7 @@
       "city": "Risør",
       "lat": 58.723,
       "lng": 9.233,
+      "county": "Agder",
       "national": false
     },
     {
@@ -746,6 +828,7 @@
       "city": "Rjukan",
       "lat": 59.878,
       "lng": 8.593,
+      "county": "Telemark",
       "national": false
     },
     {
@@ -755,6 +838,7 @@
       "city": "Røros",
       "lat": 62.5747,
       "lng": 11.3842,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -764,6 +848,7 @@
       "city": "Sande",
       "lat": 59.593,
       "lng": 10.227,
+      "county": "Vestfold",
       "national": false
     },
     {
@@ -773,6 +858,7 @@
       "city": "Sandefjord",
       "lat": 59.1313,
       "lng": 10.2167,
+      "county": "Vestfold",
       "national": false
     },
     {
@@ -782,6 +868,7 @@
       "city": "Sandnes",
       "lat": 58.8524,
       "lng": 5.7352,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -791,6 +878,7 @@
       "city": "Sandnessjøen",
       "lat": 66.022,
       "lng": 12.631,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -800,6 +888,7 @@
       "city": "Sandvika",
       "lat": 59.8915,
       "lng": 10.5256,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -809,6 +898,7 @@
       "city": "Sarpsborg",
       "lat": 59.2839,
       "lng": 11.1097,
+      "county": "Østfold",
       "national": false
     },
     {
@@ -818,6 +908,7 @@
       "city": "Sjusjøen",
       "lat": 61.22,
       "lng": 10.62,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -827,6 +918,7 @@
       "city": "Ski",
       "lat": 59.7195,
       "lng": 10.8357,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -836,6 +928,7 @@
       "city": "Skien",
       "lat": 59.2096,
       "lng": 9.609,
+      "county": "Telemark",
       "national": false
     },
     {
@@ -845,6 +938,7 @@
       "city": "Slemmestad",
       "lat": 59.789,
       "lng": 10.499,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -854,6 +948,7 @@
       "city": "Snåsa",
       "lat": 64.244,
       "lng": 12.384,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -863,6 +958,7 @@
       "city": "Sogndal",
       "lat": 61.23,
       "lng": 7.1,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -872,6 +968,7 @@
       "city": "Sola",
       "lat": 58.887,
       "lng": 5.651,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -881,6 +978,7 @@
       "city": "Sortland",
       "lat": 68.696,
       "lng": 15.412,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -890,6 +988,7 @@
       "city": "Stange",
       "lat": 60.716,
       "lng": 11.185,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -899,6 +998,7 @@
       "city": "Stavanger",
       "lat": 58.97,
       "lng": 5.7331,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -908,6 +1008,7 @@
       "city": "Steinkjer",
       "lat": 64.0149,
       "lng": 11.4954,
+      "county": "Møre og Romsdal",
       "national": false
     },
     {
@@ -917,6 +1018,7 @@
       "city": "Steinkjer",
       "lat": 64.0149,
       "lng": 11.4954,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -926,6 +1028,7 @@
       "city": "Steinkjer",
       "lat": 64.0149,
       "lng": 11.4954,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -935,6 +1038,7 @@
       "city": "Sunndalsøra",
       "lat": 62.675,
       "lng": 8.564,
+      "county": "Møre og Romsdal",
       "national": false
     },
     {
@@ -944,6 +1048,7 @@
       "city": "Svelvik",
       "lat": 59.609,
       "lng": 10.403,
+      "county": "Buskerud",
       "national": false
     },
     {
@@ -953,6 +1058,7 @@
       "city": "Svolvær",
       "lat": 68.234,
       "lng": 14.568,
+      "county": "Nordland",
       "national": false
     },
     {
@@ -962,6 +1068,7 @@
       "city": "Tromsø",
       "lat": 69.6492,
       "lng": 18.9553,
+      "county": "Troms",
       "national": false
     },
     {
@@ -971,6 +1078,7 @@
       "city": "Tromsø",
       "lat": 69.6492,
       "lng": 18.9553,
+      "county": "Troms",
       "national": false
     },
     {
@@ -980,6 +1088,7 @@
       "city": "Trondheim",
       "lat": 63.4305,
       "lng": 10.3951,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -989,6 +1098,7 @@
       "city": "Trysil",
       "lat": 61.314,
       "lng": 12.268,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -998,6 +1108,7 @@
       "city": "Tvedestrand",
       "lat": 58.622,
       "lng": 8.929,
+      "county": "Agder",
       "national": false
     },
     {
@@ -1007,6 +1118,7 @@
       "city": "Tønsberg",
       "lat": 59.2674,
       "lng": 10.4076,
+      "county": "Vestfold",
       "national": false
     },
     {
@@ -1016,6 +1128,7 @@
       "city": "Vaksdal",
       "lat": 60.48,
       "lng": 5.748,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -1025,6 +1138,7 @@
       "city": "Verdal",
       "lat": 63.791,
       "lng": 11.481,
+      "county": "Trøndelag",
       "national": false
     },
     {
@@ -1034,6 +1148,7 @@
       "city": "Vestby",
       "lat": 59.595,
       "lng": 10.749,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -1043,6 +1158,7 @@
       "city": "Vikersund",
       "lat": 59.969,
       "lng": 9.989,
+      "county": "Buskerud",
       "national": false
     },
     {
@@ -1052,6 +1168,7 @@
       "city": "Voss",
       "lat": 60.63,
       "lng": 6.413,
+      "county": "Vestland",
       "national": false
     },
     {
@@ -1061,6 +1178,7 @@
       "city": "Øyer",
       "lat": 61.27,
       "lng": 10.43,
+      "county": "Innlandet",
       "national": false
     },
     {
@@ -1070,6 +1188,7 @@
       "city": "Ålgård",
       "lat": 58.771,
       "lng": 5.85,
+      "county": "Rogaland",
       "national": false
     },
     {
@@ -1079,6 +1198,7 @@
       "city": "Årnes",
       "lat": 60.128,
       "lng": 11.472,
+      "county": "Akershus",
       "national": false
     },
     {
@@ -1088,6 +1208,7 @@
       "city": "Ås",
       "lat": 59.664,
       "lng": 10.788,
+      "county": "Akershus",
       "national": false
     }
   ],
