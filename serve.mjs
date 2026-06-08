@@ -52,9 +52,15 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 2. Static files (with a guard against path traversal).
+  // 2. Static files (with guards against path traversal and dotfiles).
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === "/") pathname = "/index.html";
+  // Never serve dotfiles/dirs (.git, .env, .DS_Store, …), even if inside ROOT.
+  if (pathname.split("/").some((seg) => seg.startsWith("."))) {
+    res.writeHead(404);
+    res.end("Not found");
+    return;
+  }
   const filePath = join(ROOT, normalize(pathname));
   if (!filePath.startsWith(ROOT)) {
     res.writeHead(403);
@@ -73,7 +79,8 @@ const server = createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+// Bind to loopback only — this is a local dev server, not for exposing on a LAN.
+server.listen(PORT, "127.0.0.1", () => {
   console.log(
     `Map running on http://localhost:${PORT}  (articles proxied at /articles)`,
   );
