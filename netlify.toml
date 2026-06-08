@@ -1,0 +1,16 @@
+# Netlify config for the newspaper map.
+#
+# The site is fully static, but the bestread (articles) endpoint sends no CORS
+# headers, so a direct browser call is blocked. This rule proxies our own
+# /articles path to the real endpoint: status = 200 makes Netlify fetch it
+# server-side and return the body under our domain, so the browser sees a
+# same-origin response and CORS never applies. Incoming query parameters
+# (site_key, period) are forwarded to the destination automatically.
+#
+# This is the production equivalent of what serve.mjs does for local dev.
+
+[[redirects]]
+  from = "/articles"
+  to = "https://services.api.no/api/stagehand/insights/articles/bestread"
+  status = 200
+  force = true
