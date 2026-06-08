@@ -486,12 +486,37 @@ function showCountyBorder(county) {
     style: {
       color: "#2563eb",
       weight: 2.5,
-      fillColor: "#2563eb",
+      fillColor: "#636976",
       fillOpacity: 0.06,
       dashArray: "5 4",
     },
   }).addTo(map);
   countyBorderLayer.bringToBack();
+}
+
+// Norway outline, drawn in sport mode so the country stands out against the dark
+// basemap. Lazily loaded + cached on first use; non-interactive so it never
+// blocks a marker click.
+let norwayBorderLayer = null;
+async function ensureNorwayBorder() {
+  if (norwayBorderLayer) return norwayBorderLayer;
+  try {
+    const res = await fetch("./norge.geojson");
+    if (!res.ok) return null;
+    norwayBorderLayer = L.geoJSON(await res.json(), {
+      interactive: false,
+      style: {
+        color: "#3c889d",
+        weight: 1.5,
+        opacity: 0.9,
+        fill: false,
+      },
+    });
+  } catch (err) {
+    console.warn("Could not load norge.geojson (Norway outline disabled)", err);
+    return null;
+  }
+  return norwayBorderLayer;
 }
 
 // Fetch every paper's articles (concurrency-limited) so the free-only filter can
@@ -762,6 +787,9 @@ async function enterSportMode() {
   }
   map.removeLayer(osmLayer);
   darkLayer.addTo(map);
+  ensureNorwayBorder().then((b) => {
+    if (b && sportMode) b.addTo(map).bringToBack();
+  });
   setNewspaperMarkersVisible(false);
   setSportNote("Laster sport…");
   try {
@@ -779,6 +807,7 @@ function exitSportMode() {
   document.body.classList.remove("sport-mode");
   map.closePopup();
   clearSportMarkers();
+  if (norwayBorderLayer) map.removeLayer(norwayBorderLayer);
   map.removeLayer(darkLayer);
   osmLayer.addTo(map);
   setNewspaperMarkersVisible(true);
