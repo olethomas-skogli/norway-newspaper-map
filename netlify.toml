@@ -1,40 +1,43 @@
 # Netlify config for the newspaper map.
 #
-# The site is fully static, but the bestread (articles) endpoint sends no CORS
-# headers, so a direct browser call is blocked. This rule proxies our own
-# /articles path to the real endpoint: status = 200 makes Netlify fetch it
-# server-side and return the body under our domain, so the browser sees a
-# same-origin response and CORS never applies. Incoming query parameters
-# (site_key, period) are forwarded to the destination automatically.
+# The site is static, but the upstream APIs send no CORS headers, so direct
+# browser calls are blocked. These status=200 redirects proxy our own /api/*
+# paths to the real endpoints server-side, so the browser sees a same-origin
+# response and CORS never applies. Incoming query parameters are forwarded.
+# (Data proxies live under /api/ so top-level paths — /sport, /gen-z, /aviser —
+# are free for client-side routing.)
 #
-# This is the production equivalent of what serve.mjs does for local dev.
+# This mirrors what serve.mjs does for local dev.
 
 [[redirects]]
-  from = "/articles"
+  from = "/api/articles"
   to = "https://services.api.no/api/stagehand/insights/articles/bestread"
   status = 200
   force = true
 
-# Sport mode: same same-origin proxy trick for the sport programs endpoint.
-# Query params (limit, offset) are forwarded automatically.
 [[redirects]]
-  from = "/sport"
+  from = "/api/sport"
   to = "https://services.api.no/api/content/search/sport/v2"
   status = 200
   force = true
 
-# genZ mode: same proxy trick for the video clips endpoint.
 [[redirects]]
-  from = "/video"
+  from = "/api/video"
   to = "https://services.api.no/api/content/search/video"
   status = 200
   force = true
 
-# genZ mode (reels): publication reel feed. The app sends content/tail/publication
-# as query params (the `to` has none) so Netlify forwards them all — matching the
-# other proxies above. A query string in `to` would drop the incoming params.
+# Reels: the app sends content/tail/publication as query params (the `to` has
+# none) so Netlify forwards them all.
 [[redirects]]
-  from = "/reels"
+  from = "/api/reels"
   to = "https://services.api.no/api/video-yoshi/v1/reels"
   status = 200
   force = true
+
+# SPA fallback: serve index.html for client-side routes (/sport, /gen-z, /aviser).
+# Non-force, so real static files (style.css, app.js, *.geojson) are served first.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

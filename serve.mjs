@@ -39,8 +39,10 @@ const MIME = {
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
 
-  // 1. Articles proxy — same origin as the page, so no CORS.
-  if (url.pathname === "/articles") {
+  // 1. Articles proxy — same origin as the page, so no CORS. Data proxies live
+  //    under /api/ so the top-level paths (/sport, /gen-z, /aviser) are free for
+  //    client-side routing.
+  if (url.pathname === "/api/articles") {
     const siteKey = url.searchParams.get("site_key") ?? "";
     const period = url.searchParams.get("period") ?? "72";
     const target = `${UPSTREAM}?site_key=${encodeURIComponent(siteKey)}&period=${encodeURIComponent(period)}`;
@@ -59,7 +61,7 @@ const server = createServer(async (req, res) => {
   }
 
   // 2. Sport programs proxy (v1 endpoint, no CORS upstream) — forwards paging.
-  if (url.pathname === "/sport") {
+  if (url.pathname === "/api/sport") {
     const limit = url.searchParams.get("limit") ?? "200";
     const offset = url.searchParams.get("offset") ?? "0";
     const sort = url.searchParams.get("sort") ?? "-eventStartTime";
@@ -78,8 +80,8 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 3. Video clips proxy (genZ mode) — newest-first by default, forwards paging.
-  if (url.pathname === "/video") {
+  // 3. Video clips proxy (newest-first by default, forwards paging).
+  if (url.pathname === "/api/video") {
     const limit = url.searchParams.get("limit") ?? "200";
     const offset = url.searchParams.get("offset") ?? "0";
     const sort = url.searchParams.get("sort") ?? "-createdAt";
@@ -99,7 +101,7 @@ const server = createServer(async (req, res) => {
   }
 
   // 4. Reels proxy (genZ mode) — a publication's own reel feed by sitekey.
-  if (url.pathname === "/reels") {
+  if (url.pathname === "/api/reels") {
     const publication = url.searchParams.get("publication") ?? "";
     const content = url.searchParams.get("content") ?? "none";
     const tail = url.searchParams.get("tail") ?? "latest";
@@ -140,6 +142,18 @@ const server = createServer(async (req, res) => {
     });
     res.end(data);
   } catch {
+    // SPA fallback: serve index.html for extensionless routes (/sport, /gen-z,
+    // /aviser) so client-side routing works on direct load / refresh.
+    if (!extname(pathname)) {
+      try {
+        const html = await readFile(join(ROOT, "index.html"));
+        res.writeHead(200, { "Content-Type": MIME[".html"] });
+        res.end(html);
+        return;
+      } catch {
+        /* fall through to 404 */
+      }
+    }
     res.writeHead(404);
     res.end("Not found");
   }
@@ -148,6 +162,6 @@ const server = createServer(async (req, res) => {
 // Bind to loopback only — this is a local dev server, not for exposing on a LAN.
 server.listen(PORT, "127.0.0.1", () => {
   console.log(
-    `Map running on http://localhost:${PORT}  (articles proxied at /articles)`,
+    `Map running on http://localhost:${PORT}  (data proxied under /api/*)`,
   );
 });

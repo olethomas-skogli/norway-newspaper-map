@@ -11,7 +11,7 @@ import { resolveTeam } from "./sport-clubs.mjs";
 // direct calls. Instead we fetch from the same-origin /articles path, which the
 // dev server (serve.mjs) proxies to the real endpoint. Start it with
 // `./start.sh` (or `node serve.mjs`).
-const BESTREAD_BASE = "/articles";
+const BESTREAD_BASE = "/api/articles";
 
 // The API only supports period=72 (most-read over the last 72 hours), so the
 // time filter is applied client-side: we keep all returned articles and narrow
@@ -629,7 +629,7 @@ async function fetchSportPrograms() {
   const out = [];
   for (let offset = 0; offset < 2000; offset += 200) {
     const res = await fetch(
-      `/sport?limit=200&offset=${offset}&sort=-eventStartTime`,
+      `/api/sport?limit=200&offset=${offset}&sort=-eventStartTime`,
     );
     if (!res.ok) {
       if (offset === 0) throw new Error(`sport ${res.status}`);
@@ -829,13 +829,7 @@ function exitSportMode() {
 
 function setupSportMode() {
   const btn = document.getElementById("sport-toggle");
-  if (btn) {
-    btn.onclick = () => {
-      if (sportMode) exitSportMode();
-      else enterSportMode();
-      refreshModeButtons();
-    };
-  }
+  if (btn) btn.onclick = () => navigate(sportMode ? "aviser" : "sport");
   const sel = document.getElementById("sport-type");
   if (sel) {
     sel.onchange = () => {
@@ -875,7 +869,7 @@ async function fetchReels(sitekey) {
   let reels = [];
   try {
     const res = await fetch(
-      `/reels?content=none&tail=latest&publication=${encodeURIComponent(sitekey)}`,
+      `/api/reels?content=none&tail=latest&publication=${encodeURIComponent(sitekey)}`,
     );
     if (res.ok) reels = ((await res.json()).results ?? []).map(mapReel);
   } catch (err) {
@@ -1066,7 +1060,43 @@ function refreshModeButtons() {
   const sb = document.getElementById("sport-toggle");
   const gb = document.getElementById("genz-toggle");
   if (sb) sb.textContent = sportMode ? "← Tilbake til aviser" : "⚽ Sport mode";
-  if (gb) gb.textContent = genzMode ? "← Tilbake til aviser" : "✨ genZ mode";
+  if (gb) gb.textContent = genzMode ? "← Tilbake til aviser" : "✨ Gen Z mode";
+}
+
+// ---- Client-side routing (/aviser, /sport, /gen-z) --------------------
+
+const pathForMode = (mode) =>
+  mode === "sport" ? "/sport" : mode === "genz" ? "/gen-z" : "/aviser";
+
+const modeFromPath = (path) =>
+  path.startsWith("/sport") ? "sport" : path.startsWith("/gen-z") ? "genz" : "aviser";
+
+// Switch to a mode without touching history (used on load + back/forward).
+function applyMode(mode) {
+  if (mode === "sport") {
+    if (!sportMode) enterSportMode();
+  } else if (mode === "genz") {
+    if (!genzMode) enterGenzMode();
+  } else {
+    if (sportMode) exitSportMode();
+    else if (genzMode) exitGenzMode();
+  }
+  refreshModeButtons();
+}
+
+// Apply a mode AND push it to the URL — used by the mode buttons.
+function navigate(mode) {
+  applyMode(mode);
+  const path = pathForMode(mode);
+  if (location.pathname !== path) history.pushState({ mode }, "", path);
+}
+
+function setupRouter() {
+  window.addEventListener("popstate", () =>
+    applyMode(modeFromPath(location.pathname)),
+  );
+  // Deep-link / refresh: enter whatever mode the current path names.
+  applyMode(modeFromPath(location.pathname));
 }
 
 async function enterGenzMode() {
@@ -1106,13 +1136,7 @@ function exitGenzMode() {
 
 function setupGenzMode() {
   const btn = document.getElementById("genz-toggle");
-  if (btn) {
-    btn.onclick = () => {
-      if (genzMode) exitGenzMode();
-      else enterGenzMode();
-      refreshModeButtons();
-    };
-  }
+  if (btn) btn.onclick = () => navigate(genzMode ? "aviser" : "genz");
 }
 
 async function init() {
@@ -1160,6 +1184,9 @@ async function init() {
     ],
     { padding: [20, 20] },
   );
+
+  // Enter the mode named by the URL (deep-link / refresh) + handle back/forward.
+  setupRouter();
 }
 
 init();
