@@ -4,14 +4,11 @@
 // - One marker per city; national papers on a separate marker.
 // - Click a paper -> fetch its top 3 most-read articles (stagehand bestread).
 
-// The bestread (articles) endpoint blocks cross-origin browser requests, so the
-// page fetches articles through the small local proxy (proxy.mjs). Start it with
-// `node map/proxy.mjs`. Set to null to attempt direct calls instead.
-const ARTICLES_PROXY = "http://localhost:8787";
-
-const BESTREAD_BASE = ARTICLES_PROXY
-  ? `${ARTICLES_PROXY}/articles`
-  : "https://services.api.no/api/stagehand/insights/articles/bestread";
+// The bestread (articles) endpoint sends no CORS headers, so the browser blocks
+// direct calls. Instead we fetch from the same-origin /articles path, which the
+// dev server (serve.mjs) proxies to the real endpoint. Start it with
+// `./start.sh` (or `node serve.mjs`).
+const BESTREAD_BASE = "/articles";
 
 // Where to draw the "national papers" marker (offshore, clearly separate).
 const NATIONAL_MARKER_POS = [60.6, 1.6];
