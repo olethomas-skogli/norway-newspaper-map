@@ -22,3 +22,19 @@
   to = "https://services.api.no/api/content/search/sport/v2"
   status = 200
   force = true
+
+# genZ mode: same proxy trick for the video clips endpoint.
+[[redirects]]
+  from = "/video"
+  to = "https://services.api.no/api/content/search/video"
+  status = 200
+  force = true
+
+# genZ mode (reels): publication reel feed. The app sends content/tail/publication
+# as query params (the `to` has none) so Netlify forwards them all — matching the
+# other proxies above. A query string in `to` would drop the incoming params.
+[[redirects]]
+  from = "/reels"
+  to = "https://services.api.no/api/video-yoshi/v1/reels"
+  status = 200
+  force = true

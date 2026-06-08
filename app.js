@@ -39,6 +39,11 @@ let sportMarkers = []; // Leaflet markers for sport pins, cleared on exit
 let currentSport = "all"; // active sportName filter
 let currentWeek = "all"; // upcoming window: "all" | "this" | "next"
 
+// genZ mode: pivot to vertical reels, one pin per publication city. Reels load
+// lazily on pin click. Mutually exclusive with sport mode.
+let genzMode = false;
+let reelMarkers = []; // Leaflet markers for reel pins, cleared on exit
+
 // Norwegian number formatting for read counts (space as thousands separator).
 const nf = new Intl.NumberFormat("nb-NO");
 
@@ -778,6 +783,7 @@ function setNewspaperMarkersVisible(visible) {
 }
 
 async function enterSportMode() {
+  if (genzMode) exitGenzMode();
   sportMode = true;
   document.body.classList.add("sport-mode");
   map.closePopup();
@@ -788,7 +794,10 @@ async function enterSportMode() {
   map.removeLayer(osmLayer);
   darkLayer.addTo(map);
   ensureNorwayBorder().then((b) => {
-    if (b && sportMode) b.addTo(map).bringToBack();
+    if (b && sportMode) {
+      b.setStyle({ color: "#1abcea" }); // cyan outline for sport
+      b.addTo(map).bringToBack();
+    }
   });
   setNewspaperMarkersVisible(false);
   setSportNote("Laster sport…");
@@ -821,7 +830,7 @@ function setupSportMode() {
     btn.onclick = () => {
       if (sportMode) exitSportMode();
       else enterSportMode();
-      btn.textContent = sportMode ? "← Tilbake til aviser" : "⚽ Sport mode";
+      refreshModeButtons();
     };
   }
   const sel = document.getElementById("sport-type");
@@ -840,11 +849,181 @@ function setupSportMode() {
   }
 }
 
+// ---- genZ mode (reels) ------------------------------------------------
+
+const REEL_FILL = "#ff2d95"; // neon hot pink
+
+// A publication's reels are fetched lazily (on pin click) and cached by sitekey.
+const reelCache = new Map(); // sitekey -> reel[]
+
+function mapReel(r) {
+  return {
+    title: r.title || "",
+    lead: r.leadText || "",
+    poster: r.poster?.url || "",
+    mp4: r.video?.src || "",
+    created: r.publishedAt ? Date.parse(r.publishedAt) : NaN,
+    permalink: r.permalink || "",
+  };
+}
+
+async function fetchReels(sitekey) {
+  if (reelCache.has(sitekey)) return reelCache.get(sitekey);
+  let reels = [];
+  try {
+    const res = await fetch(
+      `/reels?content=none&tail=latest&publication=${encodeURIComponent(sitekey)}`,
+    );
+    if (res.ok) reels = ((await res.json()).results ?? []).map(mapReel);
+  } catch (err) {
+    console.error("Reel fetch failed:", sitekey, err);
+  }
+  reelCache.set(sitekey, reels);
+  return reels;
+}
+
+function clearReelMarkers() {
+  for (const m of reelMarkers) map.removeLayer(m);
+  reelMarkers = [];
+}
+
+// One pink pin per publication city; reels load lazily when a pin is opened.
+function renderReelMarkers() {
+  clearReelMarkers();
+  for (const { papers } of cityMarkers) {
+    const { lat, lng, city } = papers[0];
+    const marker = L.circleMarker([lat, lng], {
+      radius: 6,
+      color: "#0d0b1a",
+      weight: 2,
+      fillColor: REEL_FILL,
+      fillOpacity: 0.9,
+    }).addTo(map);
+    marker.bindTooltip(city, { direction: "top" });
+    marker.bindPopup("", POPUP_OPTS);
+    marker.on("popupopen", (e) => fillReelPopup(e.popup, papers));
+    reelMarkers.push(marker);
+  }
+  setGenzNote("Klikk en by for å se reels");
+}
+
+// Lazily load + render a city's reels (vertical, inline-playable) into the popup.
+async function fillReelPopup(popup, papers) {
+  const c = document.createElement("div");
+  c.className = "video-popup";
+  const status = document.createElement("p");
+  status.className = "status";
+  status.textContent = "Laster reels…";
+  c.appendChild(status);
+  popup.setContent(c);
+  reflow(popup);
+
+  try {
+    const lists = await Promise.all(papers.map((p) => fetchReels(p.sitekey)));
+    const reels = lists
+      .flat()
+      .sort((a, b) => b.created - a.created)
+      .slice(0, 12);
+    status.remove();
+
+    if (!reels.length) {
+      const empty = document.createElement("p");
+      empty.className = "status";
+      empty.textContent = "Ingen reels her akkurat nå.";
+      c.appendChild(empty);
+      reflow(popup);
+      return;
+    }
+
+    for (const v of reels) {
+      const card = document.createElement("div");
+      card.className = "video-card";
+      const meta = Number.isNaN(v.created) ? "" : sportDate.format(v.created);
+      const media = v.mp4
+        ? `<video class="video-el" controls preload="none"${v.poster ? ` poster="${escapeHtml(v.poster)}"` : ""}><source src="${escapeHtml(v.mp4)}" type="video/mp4" /></video>`
+        : v.poster
+          ? `<img class="video-thumb" src="${escapeHtml(v.poster)}" alt="" />`
+          : "";
+      card.innerHTML = `
+        ${media}
+        <span class="video-title">${escapeHtml(v.title)}</span>
+        ${v.lead ? `<span class="video-lead">${escapeHtml(v.lead)}</span>` : ""}
+        ${meta ? `<span class="video-meta">${escapeHtml(meta)}</span>` : ""}`;
+      c.appendChild(card);
+    }
+    reflow(popup);
+  } catch (err) {
+    status.className = "status error";
+    status.textContent = "Klarte ikke å laste reels.";
+    console.error("Reel popup failed:", err);
+    reflow(popup);
+  }
+}
+
+function setGenzNote(text) {
+  const el = document.getElementById("genz-note");
+  if (el) el.textContent = text;
+}
+
+// Keep both mode buttons' labels in sync (only one mode is ever active).
+function refreshModeButtons() {
+  const sb = document.getElementById("sport-toggle");
+  const gb = document.getElementById("genz-toggle");
+  if (sb) sb.textContent = sportMode ? "← Tilbake til aviser" : "⚽ Sport mode";
+  if (gb) gb.textContent = genzMode ? "← Tilbake til aviser" : "✨ genZ mode";
+}
+
+async function enterGenzMode() {
+  if (sportMode) exitSportMode();
+  genzMode = true;
+  document.body.classList.add("genz-mode");
+  map.closePopup();
+  if (countyBorderLayer) {
+    map.removeLayer(countyBorderLayer);
+    countyBorderLayer = null;
+  }
+  map.removeLayer(osmLayer);
+  darkLayer.addTo(map);
+  ensureNorwayBorder().then((b) => {
+    if (b && genzMode) {
+      b.setStyle({ color: "#c6ff00" }); // lime outline for genZ
+      b.addTo(map).bringToBack();
+    }
+  });
+  setNewspaperMarkersVisible(false);
+  renderReelMarkers();
+}
+
+function exitGenzMode() {
+  genzMode = false;
+  document.body.classList.remove("genz-mode");
+  map.closePopup();
+  clearReelMarkers();
+  if (norwayBorderLayer) map.removeLayer(norwayBorderLayer);
+  map.removeLayer(darkLayer);
+  osmLayer.addTo(map);
+  setNewspaperMarkersVisible(true);
+  updateMarkerStyles();
+  showCountyBorder(currentCounty);
+}
+
+function setupGenzMode() {
+  const btn = document.getElementById("genz-toggle");
+  if (btn) {
+    btn.onclick = () => {
+      if (genzMode) exitGenzMode();
+      else enterGenzMode();
+      refreshModeButtons();
+    };
+  }
+}
+
 async function init() {
   setupPeriodFilter();
   setupFreeFilter();
   setupTopReadsFilter();
   setupSportMode();
+  setupGenzMode();
 
   const res = await fetch("./publications.json");
   if (!res.ok) {

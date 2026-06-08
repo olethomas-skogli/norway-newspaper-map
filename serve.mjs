@@ -21,6 +21,8 @@ const UPSTREAM =
 // v2 includes future-dated fixtures (v1 only had past replays), with comparable
 // team-name coverage once sorted newest-first.
 const SPORT_UPSTREAM = "https://services.api.no/api/content/search/sport/v2";
+const VIDEO_UPSTREAM = "https://services.api.no/api/content/search/video";
+const REELS_UPSTREAM = "https://services.api.no/api/video-yoshi/v1/reels";
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -76,7 +78,47 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 3. Static files (with guards against path traversal and dotfiles).
+  // 3. Video clips proxy (genZ mode) — newest-first by default, forwards paging.
+  if (url.pathname === "/video") {
+    const limit = url.searchParams.get("limit") ?? "200";
+    const offset = url.searchParams.get("offset") ?? "0";
+    const sort = url.searchParams.get("sort") ?? "-createdAt";
+    const target = `${VIDEO_UPSTREAM}?limit=${encodeURIComponent(limit)}&offset=${encodeURIComponent(offset)}&sort=${encodeURIComponent(sort)}`;
+    try {
+      const upstream = await fetch(target);
+      const body = await upstream.text();
+      res.writeHead(upstream.status, {
+        "Content-Type": "application/json; charset=utf-8",
+      });
+      res.end(body);
+    } catch (err) {
+      res.writeHead(502, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: String(err) }));
+    }
+    return;
+  }
+
+  // 4. Reels proxy (genZ mode) — a publication's own reel feed by sitekey.
+  if (url.pathname === "/reels") {
+    const publication = url.searchParams.get("publication") ?? "";
+    const content = url.searchParams.get("content") ?? "none";
+    const tail = url.searchParams.get("tail") ?? "latest";
+    const target = `${REELS_UPSTREAM}?content=${encodeURIComponent(content)}&tail=${encodeURIComponent(tail)}&publication=${encodeURIComponent(publication)}`;
+    try {
+      const upstream = await fetch(target);
+      const body = await upstream.text();
+      res.writeHead(upstream.status, {
+        "Content-Type": "application/json; charset=utf-8",
+      });
+      res.end(body);
+    } catch (err) {
+      res.writeHead(502, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: String(err) }));
+    }
+    return;
+  }
+
+  // 5. Static files (with guards against path traversal and dotfiles).
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === "/") pathname = "/index.html";
   // Never serve dotfiles/dirs (.git, .env, .DS_Store, …), even if inside ROOT.

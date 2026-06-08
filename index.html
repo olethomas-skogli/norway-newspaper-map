@@ -20,9 +20,14 @@
       <h1>Avisene i Norge</h1>
       <p>Klikk på en by for å velge avis og se de tre mest leste sakene.</p>
 
-      <button id="sport-toggle" class="sport-toggle" type="button">
-        ⚽ Sport mode
-      </button>
+      <div class="mode-buttons">
+        <button id="sport-toggle" class="sport-toggle" type="button">
+          ⚽ Sport mode
+        </button>
+        <button id="genz-toggle" class="genz-toggle" type="button">
+          ✨ genZ mode
+        </button>
+      </div>
 
       <!-- Sport-mode controls (shown only when body.sport-mode) -->
       <div class="sport-controls">
@@ -41,6 +46,11 @@
           </select>
         </label>
         <span id="sport-note" class="sport-note"></span>
+      </div>
+
+      <!-- genZ-mode controls (shown only when body.genz-mode) -->
+      <div class="genz-controls">
+        <span id="genz-note" class="genz-note">Klikk en by for å se reels</span>
       </div>
 
       <div class="controls">
@@ -95,6 +105,7 @@
       <span><i class="dot dot-local"></i> Lokalavis</span>
       <span><i class="dot dot-national"></i> Nasjonal avis</span>
       <span class="legend-sport"><i class="dot dot-sport"></i> Sport (direktesport.no)</span>
+      <span class="legend-genz"><i class="dot dot-genz"></i> Video (genZ)</span>
     </div>
 
     <script
