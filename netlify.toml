@@ -14,3 +14,11 @@
   to = "https://services.api.no/api/stagehand/insights/articles/bestread"
   status = 200
   force = true
+
+# Sport mode: same same-origin proxy trick for the sport programs endpoint.
+# Query params (limit, offset) are forwarded automatically.
+[[redirects]]
+  from = "/sport"
+  to = "https://services.api.no/api/content/search/sport/v2"
+  status = 200
+  force = true

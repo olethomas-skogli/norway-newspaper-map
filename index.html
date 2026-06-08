@@ -20,6 +20,29 @@
       <h1>Avisene i Norge</h1>
       <p>Klikk på en by for å velge avis og se de tre mest leste sakene.</p>
 
+      <button id="sport-toggle" class="sport-toggle" type="button">
+        ⚽ Sport mode
+      </button>
+
+      <!-- Sport-mode controls (shown only when body.sport-mode) -->
+      <div class="sport-controls">
+        <label class="field">
+          Idrett:
+          <select id="sport-type">
+            <option value="all" selected>Alle idretter</option>
+          </select>
+        </label>
+        <label class="field">
+          Når:
+          <select id="sport-week">
+            <option value="all" selected>Alle</option>
+            <option value="this">Denne uke</option>
+            <option value="next">Neste uke</option>
+          </select>
+        </label>
+        <span id="sport-note" class="sport-note"></span>
+      </div>
+
       <div class="controls">
         <input
           id="search"
@@ -71,6 +94,7 @@
     <div class="legend">
       <span><i class="dot dot-local"></i> Lokalavis</span>
       <span><i class="dot dot-national"></i> Nasjonal avis</span>
+      <span class="legend-sport"><i class="dot dot-sport"></i> Sport (direktesport.no)</span>
     </div>
 
     <script
@@ -78,6 +102,6 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
-    <script src="./app.js"></script>
+    <script type="module" src="./app.js"></script>
   </body>
 </html>

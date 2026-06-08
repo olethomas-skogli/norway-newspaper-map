@@ -18,10 +18,14 @@ const PORT = Number(process.argv[2]) || 8080;
 const ROOT = fileURLToPath(new URL(".", import.meta.url));
 const UPSTREAM =
   "https://services.api.no/api/stagehand/insights/articles/bestread";
+// v2 includes future-dated fixtures (v1 only had past replays), with comparable
+// team-name coverage once sorted newest-first.
+const SPORT_UPSTREAM = "https://services.api.no/api/content/search/sport/v2";
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".svg": "image/svg+xml",
@@ -52,7 +56,27 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 2. Static files (with guards against path traversal and dotfiles).
+  // 2. Sport programs proxy (v1 endpoint, no CORS upstream) — forwards paging.
+  if (url.pathname === "/sport") {
+    const limit = url.searchParams.get("limit") ?? "200";
+    const offset = url.searchParams.get("offset") ?? "0";
+    const sort = url.searchParams.get("sort") ?? "-eventStartTime";
+    const target = `${SPORT_UPSTREAM}?limit=${encodeURIComponent(limit)}&offset=${encodeURIComponent(offset)}&sort=${encodeURIComponent(sort)}`;
+    try {
+      const upstream = await fetch(target);
+      const body = await upstream.text();
+      res.writeHead(upstream.status, {
+        "Content-Type": "application/json; charset=utf-8",
+      });
+      res.end(body);
+    } catch (err) {
+      res.writeHead(502, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: String(err) }));
+    }
+    return;
+  }
+
+  // 3. Static files (with guards against path traversal and dotfiles).
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === "/") pathname = "/index.html";
   // Never serve dotfiles/dirs (.git, .env, .DS_Store, …), even if inside ROOT.

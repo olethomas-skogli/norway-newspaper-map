@@ -3,6 +3,9 @@
 // - Loads publications.json (built by build-data.mjs).
 // - One marker per city; national papers on a separate marker.
 // - Click a paper -> fetch its top 3 most-read articles (stagehand bestread).
+// - "Sport mode" swaps in direktesport.no sport broadcasts as map pins.
+
+import { resolveTeam } from "./sport-clubs.mjs";
 
 // The bestread (articles) endpoint sends no CORS headers, so the browser blocks
 // direct calls. Instead we fetch from the same-origin /articles path, which the
@@ -28,6 +31,14 @@ let currentCounty = "all";
 // clickable. Needs article data (prefetched), like the free-only filter.
 let topReadsN = 0;
 
+// Sport mode: pivot to direktesport.no broadcasts as map pins (best-effort,
+// placed by team name). State lives here; markers/programs are filled on enter.
+let sportMode = false;
+let sportPrograms = []; // mapped + location-resolved programs (cached)
+let sportMarkers = []; // Leaflet markers for sport pins, cleared on exit
+let currentSport = "all"; // active sportName filter
+let currentWeek = "all"; // upcoming window: "all" | "this" | "next"
+
 // Norwegian number formatting for read counts (space as thousands separator).
 const nf = new Intl.NumberFormat("nb-NO");
 
@@ -36,10 +47,19 @@ const NATIONAL_MARKER_POS = [60.6, 1.6];
 
 const map = L.map("map", { minZoom: 4 }).setView([65, 14], 4);
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 18,
-  attribution: "© OpenStreetMap contributors",
-}).addTo(map);
+// Light (default) and dark (sport mode) basemaps; only one is on the map at a time.
+const osmLayer = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  { maxZoom: 18, attribution: "© OpenStreetMap contributors" },
+).addTo(map);
+const darkLayer = L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+  {
+    maxZoom: 19,
+    subdomains: "abcd",
+    attribution: "© OpenStreetMap, © CARTO",
+  },
+);
 
 const escapeHtml = (s = "") =>
   s.replace(
@@ -539,10 +559,263 @@ function setupSearch() {
   });
 }
 
+// ---- Sport mode --------------------------------------------------------
+
+const SPORT_FILL = "#1abcea"; // direktesport cyan
+const sportDate = new Intl.DateTimeFormat("nb-NO", { dateStyle: "medium" });
+
+const startOfToday = () => {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+};
+
+function mapSportProgram(p) {
+  const teams = (p.participants ?? []).map((t) => t.name).filter(Boolean);
+  let loc = null;
+  for (const t of teams) {
+    loc = resolveTeam(t);
+    if (loc) break;
+  }
+  return {
+    title: p.title ?? "",
+    sportName: p.sportName || "Øvrig sport",
+    image: p.images?.landscapeDefault,
+    url: p.videoUrls?.web || "#",
+    start: p.eventStartTime ? Date.parse(p.eventStartTime) : NaN,
+    loc,
+  };
+}
+
+// Load UPCOMING programs (today onward). The endpoint only sorts newest-first
+// (furthest-future at offset 0), so we page back until a page's earliest event
+// predates today, keeping every program dated >= today. Cached.
+async function fetchSportPrograms() {
+  if (sportPrograms.length) return sportPrograms;
+  const today = startOfToday();
+  const out = [];
+  for (let offset = 0; offset < 2000; offset += 200) {
+    const res = await fetch(
+      `/sport?limit=200&offset=${offset}&sort=-eventStartTime`,
+    );
+    if (!res.ok) {
+      if (offset === 0) throw new Error(`sport ${res.status}`);
+      break;
+    }
+    const results = (await res.json()).results ?? [];
+    if (!results.length) break;
+
+    let minStart = Infinity;
+    for (const p of results) {
+      const start = p.eventStartTime ? Date.parse(p.eventStartTime) : NaN;
+      if (!Number.isNaN(start)) minStart = Math.min(minStart, start);
+      if (!Number.isNaN(start) && start >= today) out.push(mapSportProgram(p));
+    }
+    if (minStart < today) break; // reached the past — no upcoming events beyond
+  }
+  sportPrograms = out;
+  return sportPrograms;
+}
+
+function clearSportMarkers() {
+  for (const m of sportMarkers) map.removeLayer(m);
+  sportMarkers = [];
+}
+
+// Monday 00:00 of the week containing `ts`.
+function startOfWeek(ts) {
+  const d = new Date(ts);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  return d.getTime();
+}
+
+// [start, end) range for the active week filter, or null for "all".
+function weekRange() {
+  if (currentWeek === "all") return null;
+  const thisStart = startOfWeek(Date.now());
+  const week = 7 * 24 * 3600 * 1000;
+  const start = currentWeek === "next" ? thisStart + week : thisStart;
+  return [start, start + week];
+}
+
+// Render cyan pins for the located programs matching the active sport + week
+// filters, stacking programs that share a location onto one marker.
+function renderSportMarkers() {
+  clearSportMarkers();
+  const range = weekRange();
+  // Programs matching the sport + week filters (regardless of whether we could
+  // place them), so the note's "på kartet / uten kjent sted" counts agree.
+  const matching = sportPrograms.filter(
+    (p) =>
+      (currentSport === "all" || p.sportName === currentSport) &&
+      (!range || (p.start >= range[0] && p.start < range[1])),
+  );
+  const visible = matching.filter((p) => p.loc);
+
+  const byLoc = new Map();
+  for (const p of visible) {
+    const key = `${p.loc.lat},${p.loc.lng}`;
+    if (!byLoc.has(key))
+      byLoc.set(key, { lat: p.loc.lat, lng: p.loc.lng, programs: [] });
+    byLoc.get(key).programs.push(p);
+  }
+
+  for (const { lat, lng, programs } of byLoc.values()) {
+    const marker = L.circleMarker([lat, lng], {
+      radius: programs.length > 1 ? 8 : 6,
+      color: "#01172b",
+      weight: 2,
+      fillColor: SPORT_FILL,
+      fillOpacity: 0.9,
+    }).addTo(map);
+    marker.bindTooltip(
+      programs.length > 1
+        ? `${programs.length} sendinger`
+        : programs[0].title,
+      { direction: "top" },
+    );
+    marker.bindPopup("", POPUP_OPTS);
+    marker.on("popupopen", (e) => fillSportPopup(e.popup, programs));
+    sportMarkers.push(marker);
+  }
+
+  const unplaced = matching.length - visible.length;
+  setSportNote(
+    `${visible.length} sendinger på kartet · ${unplaced} uten kjent sted`,
+  );
+}
+
+// Order a pin's programs so the soonest upcoming game is first: future events
+// ascending (nearest first), then past events descending (most recent first).
+function sortUpcomingFirst(a, b) {
+  const now = Date.now();
+  const ka = Number.isNaN(a.start) ? -Infinity : a.start;
+  const kb = Number.isNaN(b.start) ? -Infinity : b.start;
+  const aUp = ka >= now;
+  const bUp = kb >= now;
+  if (aUp !== bUp) return aUp ? -1 : 1;
+  return aUp ? ka - kb : kb - ka;
+}
+
+// Render a program list into a sport pin's popup.
+function fillSportPopup(popup, programs) {
+  const c = document.createElement("div");
+  c.className = "sport-popup";
+  for (const p of [...programs].sort(sortUpcomingFirst).slice(0, 12)) {
+    const a = document.createElement("a");
+    a.className = "sport-prog";
+    a.href = p.url;
+    a.target = "_blank";
+    a.rel = "noopener";
+    const meta = Number.isNaN(p.start)
+      ? escapeHtml(p.sportName)
+      : `${escapeHtml(p.sportName)} · ${sportDate.format(p.start)}`;
+    a.innerHTML = `
+      ${p.image ? `<img src="${escapeHtml(p.image)}" alt="" />` : ""}
+      <span class="sport-prog-text">
+        <span class="sport-prog-title">${escapeHtml(p.title)}</span>
+        <span class="sport-prog-meta">${meta}</span>
+      </span>`;
+    c.appendChild(a);
+  }
+  popup.setContent(c);
+}
+
+// Populate the sport-type <select> once, from the located programs.
+function populateSportTypes() {
+  const sel = document.getElementById("sport-type");
+  if (!sel || sel.dataset.filled) return;
+  const sports = [
+    ...new Set(sportPrograms.filter((p) => p.loc).map((p) => p.sportName)),
+  ].sort((a, b) => a.localeCompare(b, "nb"));
+  for (const s of sports) {
+    const o = document.createElement("option");
+    o.value = s;
+    o.textContent = s;
+    sel.appendChild(o);
+  }
+  sel.dataset.filled = "1";
+}
+
+function setSportNote(text) {
+  const el = document.getElementById("sport-note");
+  if (el) el.textContent = text;
+}
+
+// Show/hide all newspaper markers (city + national) as a group.
+function setNewspaperMarkersVisible(visible) {
+  const entries = nationalEntry ? [...cityMarkers, nationalEntry] : cityMarkers;
+  for (const { marker } of entries) {
+    if (visible) marker.addTo(map);
+    else map.removeLayer(marker);
+  }
+}
+
+async function enterSportMode() {
+  sportMode = true;
+  document.body.classList.add("sport-mode");
+  map.closePopup();
+  if (countyBorderLayer) {
+    map.removeLayer(countyBorderLayer);
+    countyBorderLayer = null;
+  }
+  map.removeLayer(osmLayer);
+  darkLayer.addTo(map);
+  setNewspaperMarkersVisible(false);
+  setSportNote("Laster sport…");
+  try {
+    await fetchSportPrograms();
+    populateSportTypes();
+    renderSportMarkers();
+  } catch (err) {
+    setSportNote("Klarte ikke å laste sport.");
+    console.error("Sport fetch failed:", err);
+  }
+}
+
+function exitSportMode() {
+  sportMode = false;
+  document.body.classList.remove("sport-mode");
+  map.closePopup();
+  clearSportMarkers();
+  map.removeLayer(darkLayer);
+  osmLayer.addTo(map);
+  setNewspaperMarkersVisible(true);
+  updateMarkerStyles();
+  showCountyBorder(currentCounty);
+}
+
+function setupSportMode() {
+  const btn = document.getElementById("sport-toggle");
+  if (btn) {
+    btn.onclick = () => {
+      if (sportMode) exitSportMode();
+      else enterSportMode();
+      btn.textContent = sportMode ? "← Tilbake til aviser" : "⚽ Sport mode";
+    };
+  }
+  const sel = document.getElementById("sport-type");
+  if (sel) {
+    sel.onchange = () => {
+      currentSport = sel.value;
+      renderSportMarkers();
+    };
+  }
+  const week = document.getElementById("sport-week");
+  if (week) {
+    week.onchange = () => {
+      currentWeek = week.value;
+      renderSportMarkers();
+    };
+  }
+}
+
 async function init() {
   setupPeriodFilter();
   setupFreeFilter();
   setupTopReadsFilter();
+  setupSportMode();
 
   const res = await fetch("./publications.json");
   if (!res.ok) {
