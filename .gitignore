@@ -1,0 +1,13 @@
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# Editor / tooling
+.vscode/
+.idea/
+.playwright-mcp/
+
+# Node (none committed, but just in case)
+node_modules/

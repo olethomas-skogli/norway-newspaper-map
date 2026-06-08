@@ -1,0 +1,1132 @@
+{
+  "generatedFrom": "https://services.api.no/api/atlas-geography/v1/latest/counties?embed=(sitekeys:publication(key,name,domain))",
+  "local": [
+    {
+      "sitekey": "bergen",
+      "name": "Bergensavisen",
+      "domain": "www.ba.no",
+      "city": "Bergen",
+      "lat": 60.3913,
+      "lng": 5.3221,
+      "national": false
+    },
+    {
+      "sitekey": "aasane",
+      "name": "Åsane Tidende",
+      "domain": "www.aasanetidende.no",
+      "city": "Bergen",
+      "lat": 60.3913,
+      "lng": 5.3221,
+      "national": false
+    },
+    {
+      "sitekey": "fanapo",
+      "name": "Fanaposten",
+      "domain": "www.fanaposten.no",
+      "city": "Bergen",
+      "lat": 60.3913,
+      "lng": 5.3221,
+      "national": false
+    },
+    {
+      "sitekey": "sydves",
+      "name": "Sydvesten",
+      "domain": "www.sydvesten.no",
+      "city": "Bergen",
+      "lat": 60.3913,
+      "lng": 5.3221,
+      "national": false
+    },
+    {
+      "sitekey": "kronst",
+      "name": "Kronstadposten",
+      "domain": "www.kp.no",
+      "city": "Bergen",
+      "lat": 60.3913,
+      "lng": 5.3221,
+      "national": false
+    },
+    {
+      "sitekey": "indrea",
+      "name": "Indre Akershus Blad",
+      "domain": "www.indre.no",
+      "city": "Bjørkelangen",
+      "lat": 59.891,
+      "lng": 11.564,
+      "national": false
+    },
+    {
+      "sitekey": "avnord",
+      "name": "Avisa Nordland",
+      "domain": "www.an.no",
+      "city": "Bodø",
+      "lat": 67.2804,
+      "lng": 14.4049,
+      "national": false
+    },
+    {
+      "sitekey": "bodonu",
+      "name": "Bodø Nu",
+      "domain": "www.bodonu.no",
+      "city": "Bodø",
+      "lat": 67.2804,
+      "lng": 14.4049,
+      "national": false
+    },
+    {
+      "sitekey": "hadela",
+      "name": "Hadeland",
+      "domain": "www.hadeland.no",
+      "city": "Brandbu",
+      "lat": 60.425,
+      "lng": 10.507,
+      "national": false
+    },
+    {
+      "sitekey": "ringsb",
+      "name": "Ringsaker Blad",
+      "domain": "www.ringsaker-blad.no",
+      "city": "Brumunddal",
+      "lat": 60.88,
+      "lng": 10.941,
+      "national": false
+    },
+    {
+      "sitekey": "jaerbl",
+      "name": "Jærbladet",
+      "domain": "www.jbl.no",
+      "city": "Bryne",
+      "lat": 58.735,
+      "lng": 5.6469,
+      "national": false
+    },
+    {
+      "sitekey": "dramti",
+      "name": "Drammens Tidende",
+      "domain": "www.dt.no",
+      "city": "Drammen",
+      "lat": 59.744,
+      "lng": 10.2045,
+      "national": false
+    },
+    {
+      "sitekey": "drange",
+      "name": "Drangedalsposten",
+      "domain": "www.drangedalsposten.no",
+      "city": "Drangedal",
+      "lat": 59.096,
+      "lng": 9.056,
+      "national": false
+    },
+    {
+      "sitekey": "amtstd",
+      "name": "Akershus Amtstidende",
+      "domain": "www.amta.no",
+      "city": "Drøbak",
+      "lat": 59.663,
+      "lng": 10.631,
+      "national": false
+    },
+    {
+      "sitekey": "dalane",
+      "name": "Dalane Tidende",
+      "domain": "www.dalane-tidende.no",
+      "city": "Egersund",
+      "lat": 58.451,
+      "lng": 5.999,
+      "national": false
+    },
+    {
+      "sitekey": "__baai",
+      "name": "Eidsvoll Ullensaker Blad",
+      "domain": "www.eub.no",
+      "city": "Eidsvoll",
+      "lat": 60.328,
+      "lng": 11.26,
+      "national": false
+    },
+    {
+      "sitekey": "ostlen",
+      "name": "Østlendingen",
+      "domain": "www.ostlendingen.no",
+      "city": "Elverum",
+      "lat": 60.8819,
+      "lng": 11.5623,
+      "national": false
+    },
+    {
+      "sitekey": "enebak",
+      "name": "Enebakk Avis",
+      "domain": "www.enebakkavis.no",
+      "city": "Enebakk",
+      "lat": 59.768,
+      "lng": 11.128,
+      "national": false
+    },
+    {
+      "sitekey": "valdre",
+      "name": "Avisa Valdres",
+      "domain": "www.avisa-valdres.no",
+      "city": "Fagernes",
+      "lat": 60.987,
+      "lng": 9.238,
+      "national": false
+    },
+    {
+      "sitekey": "senja_",
+      "name": "Senja247",
+      "domain": "www.senja247.no",
+      "city": "Finnsnes",
+      "lat": 69.228,
+      "lng": 17.977,
+      "national": false
+    },
+    {
+      "sitekey": "solung",
+      "name": "Solungavisa",
+      "domain": "www.solungavisa.no",
+      "city": "Flisa",
+      "lat": 60.614,
+      "lng": 12.014,
+      "national": false
+    },
+    {
+      "sitekey": "firpos",
+      "name": "Firdaposten",
+      "domain": "www.firdaposten.no",
+      "city": "Florø",
+      "lat": 61.5996,
+      "lng": 5.0328,
+      "national": false
+    },
+    {
+      "sitekey": "frblad",
+      "name": "Fredriksstad Blad",
+      "domain": "www.f-b.no",
+      "city": "Fredrikstad",
+      "lat": 59.2181,
+      "lng": 10.9298,
+      "national": false
+    },
+    {
+      "sitekey": "frosti",
+      "name": "Frostingen",
+      "domain": "www.frostingen.no",
+      "city": "Frosta",
+      "lat": 63.587,
+      "lng": 10.739,
+      "national": false
+    },
+    {
+      "sitekey": "firda_",
+      "name": "Firda",
+      "domain": "www.firda.no",
+      "city": "Førde",
+      "lat": 61.4524,
+      "lng": 5.857,
+      "national": false
+    },
+    {
+      "sitekey": "opplan",
+      "name": "Oppland Arbeiderblad",
+      "domain": "www.oa.no",
+      "city": "Gjøvik",
+      "lat": 60.7957,
+      "lng": 10.6915,
+      "national": false
+    },
+    {
+      "sitekey": "halden",
+      "name": "Halden Arbeiderblad",
+      "domain": "www.ha-halden.no",
+      "city": "Halden",
+      "lat": 59.133,
+      "lng": 11.3875,
+      "national": false
+    },
+    {
+      "sitekey": "hamarb",
+      "name": "Hamar Arbeiderblad",
+      "domain": "www.h-a.no",
+      "city": "Hamar",
+      "lat": 60.7945,
+      "lng": 11.068,
+      "national": false
+    },
+    {
+      "sitekey": "hammer",
+      "name": "Hammerfestingen",
+      "domain": "www.hammerfestingen.no",
+      "city": "Hammerfest",
+      "lat": 70.6634,
+      "lng": 23.6821,
+      "national": false
+    },
+    {
+      "sitekey": "iharst",
+      "name": "iHarstad",
+      "domain": "www.iharstad.no",
+      "city": "Harstad",
+      "lat": 68.798,
+      "lng": 16.541,
+      "national": false
+    },
+    {
+      "sitekey": "h_avis",
+      "name": "Haugesunds Avis",
+      "domain": "www.h-avis.no",
+      "city": "Haugesund",
+      "lat": 59.4136,
+      "lng": 5.268,
+      "national": false
+    },
+    {
+      "sitekey": "eikerb",
+      "name": "Eikerbladet",
+      "domain": "www.eikerbladet.no",
+      "city": "Hokksund",
+      "lat": 59.7745,
+      "lng": 9.911,
+      "national": false
+    },
+    {
+      "sitekey": "jrlsbr",
+      "name": "Jarlsberg Avis",
+      "domain": "www.jarlsbergavis.no",
+      "city": "Holmestrand",
+      "lat": 59.489,
+      "lng": 10.314,
+      "national": false
+    },
+    {
+      "sitekey": "finpos",
+      "name": "Finnmarksposten",
+      "domain": "www.finnmarksposten.no",
+      "city": "Honningsvåg",
+      "lat": 70.982,
+      "lng": 25.97,
+      "national": false
+    },
+    {
+      "sitekey": "gjenga",
+      "name": "Gjengangeren",
+      "domain": "www.gjengangeren.no",
+      "city": "Horten",
+      "lat": 59.417,
+      "lng": 10.484,
+      "national": false
+    },
+    {
+      "sitekey": "kvinnh",
+      "name": "Kvinnheringen",
+      "domain": "www.kvinnheringen.no",
+      "city": "Husnes",
+      "lat": 59.871,
+      "lng": 5.762,
+      "national": false
+    },
+    {
+      "sitekey": "ringbl",
+      "name": "Ringerikes Blad",
+      "domain": "www.ringblad.no",
+      "city": "Hønefoss",
+      "lat": 60.168,
+      "lng": 10.258,
+      "national": false
+    },
+    {
+      "sitekey": "indero",
+      "name": "Inderøyningen",
+      "domain": "www.inderoyningen.no",
+      "city": "Inderøy",
+      "lat": 63.876,
+      "lng": 11.27,
+      "national": false
+    },
+    {
+      "sitekey": "strand",
+      "name": "Strandbuen",
+      "domain": "www.strandbuen.no",
+      "city": "Jørpeland",
+      "lat": 59.019,
+      "lng": 6.049,
+      "national": false
+    },
+    {
+      "sitekey": "sorvar",
+      "name": "Sør-Varanger Avis",
+      "domain": "www.sva.no",
+      "city": "Kirkenes",
+      "lat": 69.7273,
+      "lng": 30.045,
+      "national": false
+    },
+    {
+      "sitekey": "norhor",
+      "name": "Avisa Nordhordland",
+      "domain": "www.nordhordland.no",
+      "city": "Knarvik",
+      "lat": 60.546,
+      "lng": 5.286,
+      "national": false
+    },
+    {
+      "sitekey": "laagen",
+      "name": "Laagendalsposten",
+      "domain": "www.laagendalsposten.no",
+      "city": "Kongsberg",
+      "lat": 59.6687,
+      "lng": 9.6499,
+      "national": false
+    },
+    {
+      "sitekey": "glomda",
+      "name": "Glåmdalen",
+      "domain": "www.glomdalen.no",
+      "city": "Kongsvinger",
+      "lat": 60.1939,
+      "lng": 11.9939,
+      "national": false
+    },
+    {
+      "sitekey": "karmoy",
+      "name": "Karmøynytt",
+      "domain": "www.karmoynytt.no",
+      "city": "Kopervik",
+      "lat": 59.283,
+      "lng": 5.301,
+      "national": false
+    },
+    {
+      "sitekey": "kragbl",
+      "name": "Kragerø Blad Vestmar",
+      "domain": "www.kv.no",
+      "city": "Kragerø",
+      "lat": 58.868,
+      "lng": 9.411,
+      "national": false
+    },
+    {
+      "sitekey": "krsno_",
+      "name": "KRS - Avisen Kristiansand",
+      "domain": "www.krs.no",
+      "city": "Kristiansand",
+      "lat": 58.1467,
+      "lng": 7.9956,
+      "national": false
+    },
+    {
+      "sitekey": "tidkra",
+      "name": "Tidens Krav",
+      "domain": "www.tk.no",
+      "city": "Kristiansund",
+      "lat": 63.1109,
+      "lng": 7.7281,
+      "national": false
+    },
+    {
+      "sitekey": "ifinnm",
+      "name": "iFinnmark",
+      "domain": "www.ifinnmark.no",
+      "city": "Lakselv",
+      "lat": 70.05,
+      "lng": 24.97,
+      "national": false
+    },
+    {
+      "sitekey": "ostpos",
+      "name": "Østlands-Posten",
+      "domain": "www.op.no",
+      "city": "Larvik",
+      "lat": 59.0537,
+      "lng": 10.0357,
+      "national": false
+    },
+    {
+      "sitekey": "loftid",
+      "name": "Lofot-Tidende",
+      "domain": "www.lofot-tidende.no",
+      "city": "Leknes",
+      "lat": 68.146,
+      "lng": 13.612,
+      "national": false
+    },
+    {
+      "sitekey": "toteni",
+      "name": "Toten Idag",
+      "domain": "www.totenidag.no",
+      "city": "Lena",
+      "lat": 60.676,
+      "lng": 10.833,
+      "national": false
+    },
+    {
+      "sitekey": "ilevan",
+      "name": "iLevanger",
+      "domain": "www.ilevanger.no",
+      "city": "Levanger",
+      "lat": 63.746,
+      "lng": 11.299,
+      "national": false
+    },
+    {
+      "sitekey": "lierpo",
+      "name": "Lierposten",
+      "domain": "www.lierposten.no",
+      "city": "Lierbyen",
+      "lat": 59.786,
+      "lng": 10.239,
+      "national": false
+    },
+    {
+      "sitekey": "gudbrd",
+      "name": "Gudbrandsdølen Dagningen",
+      "domain": "www.gd.no",
+      "city": "Lillehammer",
+      "lat": 61.1153,
+      "lng": 10.4662,
+      "national": false
+    },
+    {
+      "sitekey": "rombla",
+      "name": "Romerikes Blad",
+      "domain": "www.rb.no",
+      "city": "Lillestrøm",
+      "lat": 59.956,
+      "lng": 11.049,
+      "national": false
+    },
+    {
+      "sitekey": "lyngda",
+      "name": "Lyngdals Avis",
+      "domain": "www.lyngdalsavis.no",
+      "city": "Lyngdal",
+      "lat": 58.138,
+      "lng": 7.075,
+      "national": false
+    },
+    {
+      "sitekey": "avagde",
+      "name": "Avisen Agder",
+      "domain": "www.avisenagder.no",
+      "city": "Mandal",
+      "lat": 58.029,
+      "lng": 7.459,
+      "national": false
+    },
+    {
+      "sitekey": "avigau",
+      "name": "Avisa Gaula",
+      "domain": "www.avisagaula.no",
+      "city": "Melhus",
+      "lat": 63.284,
+      "lng": 10.279,
+      "national": false
+    },
+    {
+      "sitekey": "merake",
+      "name": "Meråkerposten",
+      "domain": "www.merakerposten.no",
+      "city": "Meråker",
+      "lat": 63.417,
+      "lng": 11.747,
+      "national": false
+    },
+    {
+      "sitekey": "ranabl",
+      "name": "Rana Blad",
+      "domain": "www.ranablad.no",
+      "city": "Mo i Rana",
+      "lat": 66.3128,
+      "lng": 14.1428,
+      "national": false
+    },
+    {
+      "sitekey": "ranano",
+      "name": "Rana No",
+      "domain": "www.ranano.no",
+      "city": "Mo i Rana",
+      "lat": 66.3128,
+      "lng": 14.1428,
+      "national": false
+    },
+    {
+      "sitekey": "helgel",
+      "name": "Helgelendingen",
+      "domain": "www.helg.no",
+      "city": "Mosjøen",
+      "lat": 65.837,
+      "lng": 13.191,
+      "national": false
+    },
+    {
+      "sitekey": "mossav",
+      "name": "Moss Avis",
+      "domain": "www.moss-avis.no",
+      "city": "Moss",
+      "lat": 59.4344,
+      "lng": 10.6578,
+      "national": false
+    },
+    {
+      "sitekey": "oksnes",
+      "name": "Øksnesavisa",
+      "domain": "www.oksnesavisa.no",
+      "city": "Myre",
+      "lat": 68.915,
+      "lng": 15.076,
+      "national": false
+    },
+    {
+      "sitekey": "smaale",
+      "name": "Smaalenenes Avis",
+      "domain": "www.smaalenene.no",
+      "city": "Mysen",
+      "lat": 59.553,
+      "lng": 11.327,
+      "national": false
+    },
+    {
+      "sitekey": "nyetro",
+      "name": "Nye Troms",
+      "domain": "www.nyetroms.no",
+      "city": "Målselv",
+      "lat": 69.048,
+      "lng": 18.523,
+      "national": false
+    },
+    {
+      "sitekey": "namdal",
+      "name": "Namdalsavisa",
+      "domain": "www.namdalsavisa.no",
+      "city": "Namsos",
+      "lat": 64.466,
+      "lng": 11.4958,
+      "national": false
+    },
+    {
+      "sitekey": "fremov",
+      "name": "Fremover",
+      "domain": "www.fremover.no",
+      "city": "Narvik",
+      "lat": 68.4385,
+      "lng": 17.4272,
+      "national": false
+    },
+    {
+      "sitekey": "varing",
+      "name": "Varingen",
+      "domain": "www.varingen.no",
+      "city": "Nittedal",
+      "lat": 60.056,
+      "lng": 10.877,
+      "national": false
+    },
+    {
+      "sitekey": "telen_",
+      "name": "Telen",
+      "domain": "www.telen.no",
+      "city": "Notodden",
+      "lat": 59.559,
+      "lng": 9.258,
+      "national": false
+    },
+    {
+      "sitekey": "oeyene",
+      "name": "Øyene",
+      "domain": "www.oyene.no",
+      "city": "Nøtterøy",
+      "lat": 59.207,
+      "lng": 10.412,
+      "national": false
+    },
+    {
+      "sitekey": "harfol",
+      "name": "Hardanger Folkeblad",
+      "domain": "www.hardanger-folkeblad.no",
+      "city": "Odda",
+      "lat": 60.07,
+      "lng": 6.545,
+      "national": false
+    },
+    {
+      "sitekey": "avisao",
+      "name": "Avisa Oslo",
+      "domain": "www.ao.no",
+      "city": "Oslo",
+      "lat": 59.9139,
+      "lng": 10.7522,
+      "national": false
+    },
+    {
+      "sitekey": "akersp",
+      "name": "Akersposten",
+      "domain": "www.akersposten.no",
+      "city": "Oslo",
+      "lat": 59.9139,
+      "lng": 10.7522,
+      "national": false
+    },
+    {
+      "sitekey": "noblad",
+      "name": "Nordstrands Blad",
+      "domain": "www.noblad.no",
+      "city": "Oslo",
+      "lat": 59.9139,
+      "lng": 10.7522,
+      "national": false
+    },
+    {
+      "sitekey": "nordre",
+      "name": "Nordre Aker Budstikke",
+      "domain": "www.nab.no",
+      "city": "Oslo",
+      "lat": 59.9139,
+      "lng": 10.7522,
+      "national": false
+    },
+    {
+      "sitekey": "sagene",
+      "name": "Sagene Avis",
+      "domain": "www.sageneavis.no",
+      "city": "Oslo",
+      "lat": 59.9139,
+      "lng": 10.7522,
+      "national": false
+    },
+    {
+      "sitekey": "nordal",
+      "name": "Norddalen",
+      "domain": "www.norddalen.no",
+      "city": "Otta",
+      "lat": 61.772,
+      "lng": 9.539,
+      "national": false
+    },
+    {
+      "sitekey": "porsda",
+      "name": "Porsgrunns Dagblad",
+      "domain": "www.pd.no",
+      "city": "Porsgrunn",
+      "lat": 59.1405,
+      "lng": 9.6561,
+      "national": false
+    },
+    {
+      "sitekey": "rakkav",
+      "name": "Rakkestad Avis",
+      "domain": "www.r-a.no",
+      "city": "Rakkestad",
+      "lat": 59.426,
+      "lng": 11.343,
+      "national": false
+    },
+    {
+      "sitekey": "bygdeb",
+      "name": "Bygdebladet",
+      "domain": "www.bygdebladet.no",
+      "city": "Randaberg",
+      "lat": 58.998,
+      "lng": 5.617,
+      "national": false
+    },
+    {
+      "sitekey": "austag",
+      "name": "Aust-Agder Blad",
+      "domain": "www.austagderblad.no",
+      "city": "Risør",
+      "lat": 58.723,
+      "lng": 9.233,
+      "national": false
+    },
+    {
+      "sitekey": "rjukan",
+      "name": "Rjukan Arbeiderblad",
+      "domain": "www.rablad.no",
+      "city": "Rjukan",
+      "lat": 59.878,
+      "lng": 8.593,
+      "national": false
+    },
+    {
+      "sitekey": "retten",
+      "name": "Arbeidets Rett",
+      "domain": "www.retten.no",
+      "city": "Røros",
+      "lat": 62.5747,
+      "lng": 11.3842,
+      "national": false
+    },
+    {
+      "sitekey": "sandea",
+      "name": "Sande Avis",
+      "domain": "www.sandeavis.no",
+      "city": "Sande",
+      "lat": 59.593,
+      "lng": 10.227,
+      "national": false
+    },
+    {
+      "sitekey": "sanfjb",
+      "name": "Sandefjords Blad",
+      "domain": "www.sb.no",
+      "city": "Sandefjord",
+      "lat": 59.1313,
+      "lng": 10.2167,
+      "national": false
+    },
+    {
+      "sitekey": "sandne",
+      "name": "Sandnesposten",
+      "domain": "www.sandnesposten.no",
+      "city": "Sandnes",
+      "lat": 58.8524,
+      "lng": 5.7352,
+      "national": false
+    },
+    {
+      "sitekey": "isandn",
+      "name": "iSandnessjøen",
+      "domain": "www.isandnessjoen.no",
+      "city": "Sandnessjøen",
+      "lat": 66.022,
+      "lng": 12.631,
+      "national": false
+    },
+    {
+      "sitekey": "budsti",
+      "name": "Budstikka",
+      "domain": "www.budstikka.no",
+      "city": "Sandvika",
+      "lat": 59.8915,
+      "lng": 10.5256,
+      "national": false
+    },
+    {
+      "sitekey": "sarpsa",
+      "name": "Sarpsborg Arbeiderblad",
+      "domain": "www.sa.no",
+      "city": "Sarpsborg",
+      "lat": 59.2839,
+      "lng": 11.1097,
+      "national": false
+    },
+    {
+      "sitekey": "sjusjo",
+      "name": "Sjusjøen24",
+      "domain": "www.sjusjoen24.no",
+      "city": "Sjusjøen",
+      "lat": 61.22,
+      "lng": 10.62,
+      "national": false
+    },
+    {
+      "sitekey": "ostbla",
+      "name": "Østlandets Blad",
+      "domain": "www.oblad.no",
+      "city": "Ski",
+      "lat": 59.7195,
+      "lng": 10.8357,
+      "national": false
+    },
+    {
+      "sitekey": "telema",
+      "name": "Telemarksavisa",
+      "domain": "www.ta.no",
+      "city": "Skien",
+      "lat": 59.2096,
+      "lng": 9.609,
+      "national": false
+    },
+    {
+      "sitekey": "royken",
+      "name": "Røyken og Hurums Avis",
+      "domain": "www.rha.no",
+      "city": "Slemmestad",
+      "lat": 59.789,
+      "lng": 10.499,
+      "national": false
+    },
+    {
+      "sitekey": "snasni",
+      "name": "Snåsningen",
+      "domain": "www.snasningen.no",
+      "city": "Snåsa",
+      "lat": 64.244,
+      "lng": 12.384,
+      "national": false
+    },
+    {
+      "sitekey": "sognav",
+      "name": "Sogn Avis",
+      "domain": "www.sognavis.no",
+      "city": "Sogndal",
+      "lat": 61.23,
+      "lng": 7.1,
+      "national": false
+    },
+    {
+      "sitekey": "solabl",
+      "name": "Solabladet",
+      "domain": "www.solabladet.no",
+      "city": "Sola",
+      "lat": 58.887,
+      "lng": 5.651,
+      "national": false
+    },
+    {
+      "sitekey": "blaves",
+      "name": "Bladet Vesterålen",
+      "domain": "www.blv.no",
+      "city": "Sortland",
+      "lat": 68.696,
+      "lng": 15.412,
+      "national": false
+    },
+    {
+      "sitekey": "stange",
+      "name": "Stangeavisa",
+      "domain": "www.stangeavisa.no",
+      "city": "Stange",
+      "lat": 60.716,
+      "lng": 11.185,
+      "national": false
+    },
+    {
+      "sitekey": "gagaga",
+      "name": "RA Stavanger",
+      "domain": "www.rastavanger.no",
+      "city": "Stavanger",
+      "lat": 58.97,
+      "lng": 5.7331,
+      "national": false
+    },
+    {
+      "sitekey": "ntro24",
+      "name": "NT24",
+      "domain": "www.nt24.no",
+      "city": "Steinkjer",
+      "lat": 64.0149,
+      "lng": 11.4954,
+      "national": false
+    },
+    {
+      "sitekey": "tronde",
+      "name": "Trønder-Avisa",
+      "domain": "www.t-a.no",
+      "city": "Steinkjer",
+      "lat": 64.0149,
+      "lng": 11.4954,
+      "national": false
+    },
+    {
+      "sitekey": "steink",
+      "name": "Steinkjer-Avisa",
+      "domain": "www.steinkjer-avisa.no",
+      "city": "Steinkjer",
+      "lat": 64.0149,
+      "lng": 11.4954,
+      "national": false
+    },
+    {
+      "sitekey": "auraav",
+      "name": "Aura Avis",
+      "domain": "www.auraavis.no",
+      "city": "Sunndalsøra",
+      "lat": 62.675,
+      "lng": 8.564,
+      "national": false
+    },
+    {
+      "sitekey": "svelvp",
+      "name": "Svelviksposten",
+      "domain": "www.svelviksposten.no",
+      "city": "Svelvik",
+      "lat": 59.609,
+      "lng": 10.403,
+      "national": false
+    },
+    {
+      "sitekey": "lofpos",
+      "name": "Lofotposten",
+      "domain": "www.lofotposten.no",
+      "city": "Svolvær",
+      "lat": 68.234,
+      "lng": 14.568,
+      "national": false
+    },
+    {
+      "sitekey": "nrdlys",
+      "name": "Nordlys",
+      "domain": "www.nordlys.no",
+      "city": "Tromsø",
+      "lat": 69.6492,
+      "lng": 18.9553,
+      "national": false
+    },
+    {
+      "sitekey": "tromby",
+      "name": "TromsøBy",
+      "domain": "www.tromsoby.no",
+      "city": "Tromsø",
+      "lat": 69.6492,
+      "lng": 18.9553,
+      "national": false
+    },
+    {
+      "sitekey": "nidaro",
+      "name": "Nidaros",
+      "domain": "www.nidaros.no",
+      "city": "Trondheim",
+      "lat": 63.4305,
+      "lng": 10.3951,
+      "national": false
+    },
+    {
+      "sitekey": "lokala",
+      "name": "Lokalavisa Trysil Engerdal",
+      "domain": "www.lokal-avisa.no",
+      "city": "Trysil",
+      "lat": 61.314,
+      "lng": 12.268,
+      "national": false
+    },
+    {
+      "sitekey": "tvedes",
+      "name": "Tvedestrandsposten",
+      "domain": "www.tvedestrandsposten.no",
+      "city": "Tvedestrand",
+      "lat": 58.622,
+      "lng": 8.929,
+      "national": false
+    },
+    {
+      "sitekey": "tonsbb",
+      "name": "Tønsbergs Blad",
+      "domain": "www.tb.no",
+      "city": "Tønsberg",
+      "lat": 59.2674,
+      "lng": 10.4076,
+      "national": false
+    },
+    {
+      "sitekey": "vaksda",
+      "name": "Vaksdalposten",
+      "domain": "www.vp.no",
+      "city": "Vaksdal",
+      "lat": 60.48,
+      "lng": 5.748,
+      "national": false
+    },
+    {
+      "sitekey": "iverda",
+      "name": "iVerdal",
+      "domain": "www.iverdal.no",
+      "city": "Verdal",
+      "lat": 63.791,
+      "lng": 11.481,
+      "national": false
+    },
+    {
+      "sitekey": "vestby",
+      "name": "Vestby Avis",
+      "domain": "www.vestbyavis.no",
+      "city": "Vestby",
+      "lat": 59.595,
+      "lng": 10.749,
+      "national": false
+    },
+    {
+      "sitekey": "bygdep",
+      "name": "Bygdeposten",
+      "domain": "www.bygdeposten.no",
+      "city": "Vikersund",
+      "lat": 59.969,
+      "lng": 9.989,
+      "national": false
+    },
+    {
+      "sitekey": "__baaf",
+      "name": "Hordaland",
+      "domain": "www.avisa-hordaland.no",
+      "city": "Voss",
+      "lat": 60.63,
+      "lng": 6.413,
+      "national": false
+    },
+    {
+      "sitekey": "hafjel",
+      "name": "Hafjell24",
+      "domain": "www.hafjell24.no",
+      "city": "Øyer",
+      "lat": 61.27,
+      "lng": 10.43,
+      "national": false
+    },
+    {
+      "sitekey": "gjesda",
+      "name": "Gjesdalbuen",
+      "domain": "www.gbnett.no",
+      "city": "Ålgård",
+      "lat": 58.771,
+      "lng": 5.85,
+      "national": false
+    },
+    {
+      "sitekey": "raumne",
+      "name": "Raumnes",
+      "domain": "www.raumnes.no",
+      "city": "Årnes",
+      "lat": 60.128,
+      "lng": 11.472,
+      "national": false
+    },
+    {
+      "sitekey": "asavis",
+      "name": "Ås Avis",
+      "domain": "www.aasavis.no",
+      "city": "Ås",
+      "lat": 59.664,
+      "lng": 10.788,
+      "national": false
+    }
+  ],
+  "national": [
+    {
+      "sitekey": "bondeb",
+      "name": "Bondebladet",
+      "domain": "www.bondebladet.no",
+      "national": true
+    },
+    {
+      "sitekey": "nation",
+      "name": "Nationen",
+      "domain": "www.nationen.no",
+      "national": true
+    },
+    {
+      "sitekey": "nettav",
+      "name": "Nettavisen",
+      "domain": "www.nettavisen.no",
+      "national": true
+    },
+    {
+      "sitekey": "landbr",
+      "name": "Norsk Landbruk",
+      "domain": "www.norsklandbruk.no",
+      "national": true
+    },
+    {
+      "sitekey": "skolea",
+      "name": "Skoleavisa",
+      "domain": "www.skoleavisa.no",
+      "national": true
+    },
+    {
+      "sitekey": "trakto",
+      "name": "Traktor",
+      "domain": "www.traktor.no",
+      "national": true
+    }
+  ]
+}
