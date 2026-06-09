@@ -15,6 +15,9 @@
 // Seeded from the most frequent clubs in a ~2000-program sample; grow the tables
 // to improve coverage (see build-sport-clubs.mjs for the unresolved list).
 
+import { CITY_COORDS } from "./coords.mjs";
+import { GEOCODED } from "./sport-coords.generated.mjs";
+
 export const PLACE_COORDS = {
   oslo: [59.9139, 10.7522],
   bergen: [60.3913, 5.3221],
@@ -86,6 +89,9 @@ export const PLACE_COORDS = {
   hokksund: [59.7745, 9.9105],
   kopervik: [59.2833, 5.3008],
   lakselv: [70.0667, 24.9667],
+  hallingdal: [60.6253, 8.555], // Hallingdal FK, Ål
+  odal: [60.2528, 11.6892], // Odal, around Kongsvinger (Skarnes/Sør-Odal)
+  melbo: [68.5028, 14.8089], // Melbu, Hadsel
 };
 
 export const CLUB_ALIASES = {
@@ -156,42 +162,90 @@ export const CLUB_ALIASES = {
   rælingen: "lillestrøm",
   nybergsund: "trysil",
   porsanger: "lakselv",
+  "djerv 1919": "haugesund",
+  grei: "oslo",
+  ready: "oslo",
+  varegg: "bergen", // Sandviken, Bergen
+  skidar: "skien",
+  storm: "skien",
 };
 
+// Lowercase + fold Swedish diacritics to their Norwegian equivalents (ö→ø, ä→æ)
+// so "Östersund" and "Østersund" resolve to the same geocoded entry.
 const norm = (s) =>
   (s || "")
     .toLowerCase()
+    .replace(/ö/g, "ø")
+    .replace(/ä/g, "æ")
     .replace(/\s+/g, " ")
     .trim();
 
 // Drop a trailing reserve-team marker ("2", "3", "II", "B").
 const stripReserve = (s) => s.replace(/\s+(2|3|ii|iii|b)$/i, "").trim();
 
+// Combined gazetteer: the hand-curated places, plus the 108 newspaper towns from
+// coords.mjs, plus build-time geocoded names (sport-coords.generated.mjs). All
+// keyed by lowercase place/name token -> [lat, lng]; first writer wins so the
+// curated PLACE_COORDS take priority over looser geocoded entries.
+const GAZETTEER = { ...PLACE_COORDS };
+for (const { city, lat, lng } of Object.values(CITY_COORDS)) {
+  const key = norm(city);
+  if (key && !(key in GAZETTEER)) GAZETTEER[key] = [lat, lng];
+}
+for (const [key, coords] of Object.entries(GEOCODED)) {
+  if (!(key in GAZETTEER)) GAZETTEER[key] = coords;
+}
+
 // Places tried longest-first so the most specific name wins.
-const PLACE_KEYS = Object.keys(PLACE_COORDS).sort((a, b) => b.length - a.length);
+const PLACE_KEYS = Object.keys(GAZETTEER).sort((a, b) => b.length - a.length);
 
-// Resolve a team name to { lat, lng } or null.
-export function resolveTeam(name) {
-  const n = stripReserve(norm(name));
-  if (!n) return null;
+// Filler tokens to ignore when scanning free-text titles for a place.
+const FILLER = new Set(
+  ("del damer menn kvinner herrer runde kamp cup nm norgesmesterskap finale " +
+    "landsfinale semifinale kvartfinale i og med mot vs start målgang kveld natt " +
+    "morgen liga divisjon serie sendingen sending direkte")
+    .split(" "),
+);
 
-  // 1. Exact club alias, then exact place.
-  if (CLUB_ALIASES[n]) return coordsOf(CLUB_ALIASES[n]);
-  if (PLACE_COORDS[n]) return xy(PLACE_COORDS[n]);
-
-  // 2. Gazetteer: a place that appears as a whole token, or as a prefix of a
-  //    token when the place is long enough to be unambiguous (>= 5 chars).
-  const tokens = n.split(/[ /]+/);
+// Scan a normalized string's tokens for a gazetteer place (whole token, or a
+// prefix when the place is >= 5 chars so it's unambiguous). `skipFiller` drops
+// connective words so long event titles don't match on stray tokens.
+function scanTokens(n, skipFiller) {
+  const tokens = n.split(/[ /,.\-–()]+/).filter((t) => {
+    if (t.length < 3 || /^\d+$/.test(t) || /^v\d+$/.test(t)) return false;
+    return !skipFiller || !FILLER.has(t);
+  });
   for (const place of PLACE_KEYS) {
     for (const t of tokens) {
       if (t === place || (place.length >= 5 && t.startsWith(place))) {
-        return xy(PLACE_COORDS[place]);
+        return xy(GAZETTEER[place]);
       }
     }
   }
   return null;
 }
 
+// Resolve a team name to { lat, lng } or null.
+export function resolveTeam(name) {
+  const n = stripReserve(norm(name));
+  if (!n) return null;
+
+  // 1. Exact club alias, then exact gazetteer / geocoded name.
+  if (CLUB_ALIASES[n]) return coordsOf(CLUB_ALIASES[n]);
+  if (GAZETTEER[n]) return xy(GAZETTEER[n]);
+
+  // 2. Token / prefix gazetteer scan over the team name.
+  return scanTokens(n, false);
+}
+
+// Resolve a place from a free-text event title (team-less sports often carry the
+// town in the title, e.g. "…, målgang i Moss"). Filler-aware to avoid stray hits.
+export function resolveText(text) {
+  const n = norm(text);
+  if (!n) return null;
+  return scanTokens(n, true);
+}
+
 const coordsOf = (placeKey) =>
-  PLACE_COORDS[placeKey] ? xy(PLACE_COORDS[placeKey]) : null;
+  GAZETTEER[placeKey] ? xy(GAZETTEER[placeKey]) : null;
 const xy = ([lat, lng]) => ({ lat, lng });

@@ -18,9 +18,10 @@ const PORT = Number(process.argv[2]) || 8080;
 const ROOT = fileURLToPath(new URL(".", import.meta.url));
 const UPSTREAM =
   "https://services.api.no/api/stagehand/insights/articles/bestread";
-// v2 includes future-dated fixtures (v1 only had past replays), with comparable
-// team-name coverage once sorted newest-first.
-const SPORT_UPSTREAM = "https://services.api.no/api/content/search/sport/v2";
+// Yoshi weekly schedule: one flat array of broadcasts per ISO week, scoped by
+// {year}/{week} in the path — no paging, explicit home/away team names.
+const SCHEDULE_UPSTREAM =
+  "https://services.api.no/api/video-yoshi/v1/sport/schedule";
 const VIDEO_UPSTREAM = "https://services.api.no/api/content/search/video";
 const REELS_UPSTREAM = "https://services.api.no/api/video-yoshi/v1/reels";
 
@@ -60,12 +61,18 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 2. Sport programs proxy (v1 endpoint, no CORS upstream) — forwards paging.
-  if (url.pathname === "/api/sport") {
-    const limit = url.searchParams.get("limit") ?? "200";
-    const offset = url.searchParams.get("offset") ?? "0";
-    const sort = url.searchParams.get("sort") ?? "-eventStartTime";
-    const target = `${SPORT_UPSTREAM}?limit=${encodeURIComponent(limit)}&offset=${encodeURIComponent(offset)}&sort=${encodeURIComponent(sort)}`;
+  // 2. Sport schedule proxy — /api/sport-schedule/{year}/{week} maps to the
+  //    Yoshi weekly schedule (year/week live in the upstream path, no CORS).
+  if (url.pathname.startsWith("/api/sport-schedule/")) {
+    const [year, week] = url.pathname
+      .slice("/api/sport-schedule/".length)
+      .split("/");
+    if (!/^\d+$/.test(year ?? "") || !/^\d+$/.test(week ?? "")) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "year and week must be integers" }));
+      return;
+    }
+    const target = `${SCHEDULE_UPSTREAM}/${year}/${week}/json`;
     try {
       const upstream = await fetch(target);
       const body = await upstream.text();

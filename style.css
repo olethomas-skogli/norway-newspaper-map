@@ -348,6 +348,20 @@ body.sport-mode .leaflet-control-attribution a {
   color: #1abcea;
 }
 
+/* Offshore "ukjent sted" pin labels — dark, unobtrusive, no pointer arrow. */
+.leaflet-tooltip.sport-unknown-label {
+  background: rgba(1, 23, 43, 0.85);
+  border: 1px solid #475569;
+  color: #c1cae2;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  box-shadow: none;
+}
+.leaflet-tooltip.sport-unknown-label::before {
+  display: none; /* hide the callout arrow */
+}
+
 /* Sport program list in a pin popup. */
 .sport-popup {
   display: flex;

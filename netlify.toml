@@ -16,8 +16,8 @@
   force = true
 
 [[redirects]]
-  from = "/api/sport"
-  to = "https://services.api.no/api/content/search/sport/v2"
+  from = "/api/sport-schedule/:year/:week"
+  to = "https://services.api.no/api/video-yoshi/v1/sport/schedule/:year/:week/json"
   status = 200
   force = true
 

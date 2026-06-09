@@ -5,7 +5,7 @@
 // - Click a paper -> fetch its top 3 most-read articles (stagehand bestread).
 // - "Sport mode" swaps in direktesport.no sport broadcasts as map pins.
 
-import { resolveTeam } from "./sport-clubs.mjs";
+import { resolveTeam, resolveText } from "./sport-clubs.mjs";
 
 // The bestread (articles) endpoint sends no CORS headers, so the browser blocks
 // direct calls. Instead we fetch from the same-origin /articles path, which the
@@ -52,6 +52,12 @@ const nf = new Intl.NumberFormat("nb-NO");
 
 // Where to draw the "national papers" marker (offshore, clearly separate).
 const NATIONAL_MARKER_POS = [60.6, 1.6];
+
+// Column in the North Sea where placeless sport events are stacked, one marker
+// per sport (clearly offshore so they read as "no real location").
+const SPORT_UNKNOWN_ANCHOR = [63.0, 1.5]; // top of the column
+const SPORT_UNKNOWN_STEP = 0.7; // degrees latitude south, per sport
+const SPORT_UNKNOWN_FILL = "#475569"; // slate — distinct from cyan SPORT_FILL
 
 const map = L.map("map", { minZoom: 4 }).setView([65, 14], 4);
 
@@ -603,48 +609,92 @@ const startOfToday = () => {
   return d.getTime();
 };
 
+// The schedule endpoint gives `sport` as an enum (no display name), so map the
+// known ones to Norwegian labels and prettify unknowns (SPORT_FOO_BAR → "Foo bar").
+const SPORT_NAMES = {
+  SPORT_FOOTBALL: "Fotball",
+  SPORT_HARNESS_RACING: "Trav",
+  SPORT_GYMNASTICS: "Gymnastikk og turn",
+  SPORT_MOTORSPORT_BILCROSS: "Bilcross",
+  SPORT_FUNCTIONAL_FITNESS_AND_CROSSFIT: "Functional Fitness",
+  SPORT_OTHER: "Øvrig sport",
+};
+function sportNameFromEnum(s) {
+  if (!s) return "Øvrig sport";
+  if (SPORT_NAMES[s]) return SPORT_NAMES[s];
+  const words = s.replace(/^SPORT_/, "").replace(/_/g, " ").toLowerCase().trim();
+  return words ? words[0].toUpperCase() + words.slice(1) : "Øvrig sport";
+}
+
 function mapSportProgram(p) {
-  const teams = (p.participants ?? []).map((t) => t.name).filter(Boolean);
+  const teams = [p.homeTeam, p.awayTeam].filter(Boolean);
   let loc = null;
   for (const t of teams) {
     loc = resolveTeam(t);
     if (loc) break;
   }
+  // Team-less sports (trav, seiling…) carry the place in the title instead.
+  if (!loc) loc = resolveText(p.title);
   return {
     title: p.title ?? "",
-    sportName: p.sportName || "Øvrig sport",
-    image: p.images?.landscapeDefault,
-    url: p.videoUrls?.web || "#",
+    sportName: sportNameFromEnum(p.sport),
+    image: p.image,
+    url: p.dsUrl || "#",
     start: p.eventStartTime ? Date.parse(p.eventStartTime) : NaN,
     loc,
   };
 }
 
-// Load UPCOMING programs (today onward). The endpoint only sorts newest-first
-// (furthest-future at offset 0), so we page back until a page's earliest event
-// predates today, keeping every program dated >= today. Cached.
+// ISO-8601 week number + week-year for a date. The week-year can differ from the
+// calendar year at the Dec/Jan boundary (e.g. 2026-01-01 is week 1 of 2026, but
+// 2027-01-01 is week 53 of 2026), so the schedule path needs the ISO year.
+function isoWeekParts(date) {
+  const d = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  );
+  // Shift to the Thursday of this week — that day's year is the ISO week-year.
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  const year = d.getUTCFullYear();
+  const yearStart = Date.UTC(year, 0, 1);
+  const week = Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+  return { year, week };
+}
+
+// How many ISO weeks ahead to load. Broadcasts cluster near-term, so a bounded
+// forward window keeps the default "all" view fast while covering the schedule.
+const SCHEDULE_WEEKS = 10;
+
+// Load UPCOMING programs (today onward) from the weekly schedule endpoint. We
+// fetch a bounded window of ISO weeks (this week + the next SCHEDULE_WEEKS-1) in
+// parallel, then keep every program dated >= today. Cached.
 async function fetchSportPrograms() {
   if (sportPrograms.length) return sportPrograms;
   const today = startOfToday();
-  const out = [];
-  for (let offset = 0; offset < 2000; offset += 200) {
-    const res = await fetch(
-      `/api/sport?limit=200&offset=${offset}&sort=-eventStartTime`,
-    );
-    if (!res.ok) {
-      if (offset === 0) throw new Error(`sport ${res.status}`);
-      break;
-    }
-    const results = (await res.json()).results ?? [];
-    if (!results.length) break;
+  const base = new Date(today);
+  const weeks = Array.from({ length: SCHEDULE_WEEKS }, (_, i) => {
+    const d = new Date(base);
+    d.setDate(d.getDate() + i * 7);
+    return isoWeekParts(d);
+  });
 
-    let minStart = Infinity;
-    for (const p of results) {
-      const start = p.eventStartTime ? Date.parse(p.eventStartTime) : NaN;
-      if (!Number.isNaN(start)) minStart = Math.min(minStart, start);
-      if (!Number.isNaN(start) && start >= today) out.push(mapSportProgram(p));
-    }
-    if (minStart < today) break; // reached the past — no upcoming events beyond
+  const pages = await Promise.all(
+    weeks.map(async ({ year, week }) => {
+      try {
+        const res = await fetch(`/api/sport-schedule/${year}/${week}`);
+        if (!res.ok) return [];
+        const data = await res.json();
+        return Array.isArray(data) ? data : (data.results ?? []);
+      } catch (err) {
+        console.error("Sport schedule fetch failed:", year, week, err);
+        return [];
+      }
+    }),
+  );
+
+  const out = [];
+  for (const p of pages.flat()) {
+    const start = p.eventStartTime ? Date.parse(p.eventStartTime) : NaN;
+    if (!Number.isNaN(start) && start >= today) out.push(mapSportProgram(p));
   }
   sportPrograms = out;
   return sportPrograms;
@@ -713,9 +763,40 @@ function renderSportMarkers() {
     sportMarkers.push(marker);
   }
 
-  const unplaced = matching.length - visible.length;
+  // Events we couldn't geolocate go offshore, one stacked marker per sport, so
+  // they stay visible and clickable instead of vanishing from the map.
+  const unplaced = matching.filter((p) => !p.loc);
+  const bySport = new Map();
+  for (const p of unplaced) {
+    if (!bySport.has(p.sportName)) bySport.set(p.sportName, []);
+    bySport.get(p.sportName).push(p);
+  }
+  // Stable offshore slot per sport (independent of the active filter).
+  const order = [...new Set(sportPrograms.map((p) => p.sportName))].sort((a, b) =>
+    a.localeCompare(b, "nb"),
+  );
+  for (const [sportName, programs] of bySport) {
+    const lat =
+      SPORT_UNKNOWN_ANCHOR[0] - order.indexOf(sportName) * SPORT_UNKNOWN_STEP;
+    const marker = L.circleMarker([lat, SPORT_UNKNOWN_ANCHOR[1]], {
+      radius: programs.length > 1 ? 8 : 6,
+      color: "#fff",
+      weight: 2,
+      fillColor: SPORT_UNKNOWN_FILL,
+      fillOpacity: 0.85,
+    }).addTo(map);
+    marker.bindTooltip(`${sportName} · ukjent sted (${programs.length})`, {
+      direction: "right",
+      permanent: true,
+      className: "sport-unknown-label",
+    });
+    marker.bindPopup("", POPUP_OPTS);
+    marker.on("popupopen", (e) => fillSportPopup(e.popup, programs));
+    sportMarkers.push(marker);
+  }
+
   setSportNote(
-    `${visible.length} sendinger på kartet · ${unplaced} uten kjent sted`,
+    `${visible.length} sendinger på kartet · ${unplaced.length} uten kjent sted (vist til havs)`,
   );
 }
 
@@ -755,12 +836,14 @@ function fillSportPopup(popup, programs) {
   popup.setContent(c);
 }
 
-// Populate the sport-type <select> once, from the located programs.
+// Populate the sport-type <select> once, from every sport in the loaded data.
+// Team-less sports (trav, seiling, gym…) carry no location, so selecting them
+// shows no pins — just the "uten kjent sted" count — but they stay selectable.
 function populateSportTypes() {
   const sel = document.getElementById("sport-type");
   if (!sel || sel.dataset.filled) return;
   const sports = [
-    ...new Set(sportPrograms.filter((p) => p.loc).map((p) => p.sportName)),
+    ...new Set(sportPrograms.map((p) => p.sportName)),
   ].sort((a, b) => a.localeCompare(b, "nb"));
   for (const s of sports) {
     const o = document.createElement("option");
